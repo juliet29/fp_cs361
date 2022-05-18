@@ -11,11 +11,11 @@ import os
 print("imports!")
 
 # folder where the model will be saved 
-adjust_string_name = "th_10"
+adjust_string_name = "th_0518_00c"
 
 # identify the model 
-model_name = "thornton_10_var_materials_4" 
-model_dir = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/energy_models/{model_name}/run"
+model_name = "05_18/th_0518_00" 
+model_dir = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{model_name}" # /run
 
 
 # set the idd
@@ -23,20 +23,20 @@ iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
 IDF.setiddname(iddfile)
 
 # get the idf and creat the eppy version
-idfPath = os.path.join(model_dir, "in.idf")
+idfPath = os.path.join(model_dir, "in2.idf")
 epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
 idf0 = IDF(idfPath, epw)
 
 # # make a new dir for the output
 root = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models"
-adjusted_model_dir = os.path.join(root, "05_17")
+adjusted_model_dir = os.path.join(root, "05_18")
 
 # create new directory to save the file 
 new_dir_name = os.path.join(adjusted_model_dir, adjust_string_name)
 os.makedirs(new_dir_name)
 
 # save the updated idf there
-idf0.save(os.path.join(new_dir_name, "in2.idf"))
+idf0.save(os.path.join(new_dir_name, "in3.idf"))
 
 # run the idf 
 idf0.run(output_directory=new_dir_name)
