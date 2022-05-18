@@ -11,10 +11,10 @@ import os
 print("imports!")
 
 # folder where the model will be saved 
-adjust_string_name = "th_0518_00c"
+adjust_string_name = "th_0518_01b"
 
 # identify the model 
-model_name = "05_18/th_0518_00" 
+model_name = "05_18/th_0518_01_materials" 
 model_dir = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{model_name}" # /run
 
 
@@ -23,7 +23,7 @@ iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
 IDF.setiddname(iddfile)
 
 # get the idf and creat the eppy version
-idfPath = os.path.join(model_dir, "in2.idf")
+idfPath = os.path.join(model_dir, "in.idf")
 epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
 idf0 = IDF(idfPath, epw)
 
