@@ -39,11 +39,11 @@ class AssignParams:
                     "stairs": dp[0],
                 },
                 "infiltration": {
-                    "building": dp[0],
+                    "bldg": dp[0],
                     "stairs": dp[0],
                 },
                 "occupancy": {
-                    "building": dp[0],
+                    "bldg": dp[0],
                 }
 
             },
@@ -93,7 +93,7 @@ class AssignParams:
                         "offseason_fraction": dp[0], },
                 },
                 "infiltration": {
-                    "building": {
+                    "bldg": {
                         "night": dp[0],
                         "working_hours": dp[0],
                         "break_hours": dp[0],
@@ -101,7 +101,7 @@ class AssignParams:
 
                 },
                 "occupancy": {
-                    "building": {
+                    "bldg": {
                         "night": dp[0],
                         "working_hours": dp[0],
                         "break_hours": dp[0],
@@ -116,3 +116,9 @@ class AssignParams:
         fake_design_point = list(range(1,61)) 
         dp_dict = self.assign_params(fake_design_point)
         return dp_dict
+
+# dp_equip = dp_dict["default_vals"]["equipment"]
+# for name in zone_names:
+#     zone_obj = [m for m in [idf0.idfobjects["ElectricEquipment"]] if name in m.Schedule_Name]
+#     zone_obj.Watts_per_Zone_Floor_Area = map_samples(
+#         dp_equip[name], 1, 50)

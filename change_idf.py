@@ -60,23 +60,34 @@ for type in material_types:
 
 
 
-# --------- Default Values  --------
+# --------- Default Values  --------------------------
 
 def assign_default_values(value_type, zone_names, idf_key, object_key, domain):
     dp_equip = dp_dict["default_vals"][value_type]
     for name in zone_names:
-        zone_obj = [m for m in [idf0.idfobjects[idf_key]] if name in m.Schedule_Name]
+        zone_obj = [m for m in [idf0.idfobjects[idf_key]] if name.title() in m.Schedule_Name]
         zone_obj[object_key]= map_samples(
             dp_equip[name], domain[0], domain[1])
 
 
 
 # -- Equipment
-dp_equip = dp_dict["default_vals"]["equipment"]
-
 zone_names = ["auditorium", "lab", "office"]
-for name in zone_names:
-    zone_obj = [m for m in [idf0.idfobjects["ElectricEquipment"]] if name in m.Schedule_Name]
-    zone_obj.Watts_per_Zone_Floor_Area = map_samples(
-        dp_equip[name], 1, 50)
+assign_default_values("equipment", zone_names, "ElectricEquipment", "Watts_per_Zone_Floor_Area", [1,50])
 
+# -- Light
+zone_names = ["auditorium", "lab", "office", "stairs"]
+assign_default_values("light", zone_names, "Lights", "Watts_per_Zone_Floor_Area", [1,15])
+
+# --Infiltration 
+zone_names = ["bldg", "stairs"]
+assign_default_values("infiltration", zone_names, "ZoneInfiltration:DesignFlowRate", "Flow_per_Exterior_Surface_Area", [0.00001,0.008])
+
+# -- Occupancy
+zone_names = ["bldg"]
+assign_default_values("occupancy", zone_names, "People", "People_per_Zone_Floor_Area", [0.001, 0.5])
+
+
+
+
+# --------- Schedules --------------------------
