@@ -2,15 +2,12 @@
 # TODO insert some notes about what this does 
 """
 
-
 from eppy import *
 from eppy.modeleditor import IDF
 import os
 from assign_params import AssignParams
 
-# --------- Helpers -------
-
-
+# --------- Helpers --------------------------
 def map_samples(input, output_start, output_end, input_start=0, input_end=1):
     slope = (output_end - output_start) / (input_end - input_start)
     output = output_start + slope * (input - input_start)
@@ -91,3 +88,4 @@ assign_default_values("occupancy", zone_names, "People", "People_per_Zone_Floor_
 
 
 # --------- Schedules --------------------------
+# TODO inner fx to assign times to fields for a given zone and energy use type. outer function for zones 

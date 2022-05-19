@@ -112,8 +112,11 @@ class AssignParams:
         }
         return dp_dict
 
+
+
     def make_a_dict(self):
         fake_design_point = list(range(1,61)) 
+        # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict 
         dp_dict = self.assign_params(fake_design_point)
         return dp_dict
 
