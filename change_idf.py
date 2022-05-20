@@ -21,7 +21,7 @@ iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
 IDF.setiddname(iddfile)
 
 # get the idf
-idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_18/th_0518_00c/in3.idf"
+idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_18/th_0518_01b/in3.idf"
 
 # get the weather file
 epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
@@ -51,7 +51,7 @@ material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
 materials = idf0.idfobjects["Material:NoMass"]
 for type in material_types:
     mat_obj = [m for m in idf0.idfobjects["Material:NoMass"]
-               if m.Name == f"{type}_VAR_MAT"]
+               if m.Name == f"{type}_VAR_MAT"][0]
     mat_obj.Thermal_Resistance = map_samples(
         dp_constructions[type.lower()], 0.01, 5)
 
@@ -62,7 +62,11 @@ for type in material_types:
 def assign_default_values(value_type, zone_names, idf_key, object_key, domain):
     dp_equip = dp_dict["default_vals"][value_type]
     for name in zone_names:
-        zone_obj = [m for m in [idf0.idfobjects[idf_key]] if name.title() in m.Schedule_Name]
+        # print(idf_key)
+        try:
+            zone_obj = [m for m in idf0.idfobjects[idf_key] if name.title() in m.Schedule_Name][0]
+        except:
+            zone_obj = [m for m in idf0.idfobjects[idf_key] if name.title() in m.Number_of_People_Schedule_Name][0]
         zone_obj[object_key]= map_samples(
             dp_equip[name], domain[0], domain[1])
 
@@ -145,7 +149,16 @@ use_types = {
 # use_types = ["equipment", "light", "infiltration", "occupancy"]
 for k in use_types.keys():
     for v in use_types[k]: 
-        zone_obj = [m for m in [idf0.idfobjects["Schedule:Compact"]] if k in m.Name and v.title() in m.Name]
+        zone_obj = [m for m in [idf0.idfobjects["Schedule:Compact"]] if k in m.Name and v.title() in m.Name][0]
         assign_sched_values(zone_obj, dp_sched[k.lower()][v])
+
+
+
+# --------- Run It   --------------------------
+
+new_dir_name = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19/th_05019_00"
+
+# run the idf 
+idf0.run(output_directory=new_dir_name)
 
 
