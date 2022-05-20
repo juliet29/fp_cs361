@@ -53,12 +53,11 @@ for ix, pt in enumerate(design_pts):
     idf0 = change_idf(idf0, pt) 
 
     # make a new dir for the output
-    new_dir_name = os.path.join(batch_dir, f"sample_{ix}")
+    new_dir_name = os.path.join(batch_dir, f"sample_{ix+1}")
     os.makedirs(new_dir_name)
 
     # save the updated idf there
     idf0.save(os.path.join(new_dir_name, "in3.idf"))
-
 
     # run the idf 
     try:
