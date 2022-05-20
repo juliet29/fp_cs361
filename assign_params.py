@@ -2,6 +2,8 @@
 # TODO insert some notes about what this does 
 """
 
+import random
+
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
     __getattr__ = dict.get
@@ -115,7 +117,7 @@ class AssignParams:
 
 
     def make_a_dict(self):
-        fake_design_point = list(range(1,61)) 
+        fake_design_point = vars = [random.random() for i in range(0,61)]
         # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict
         # https://www.freecodecamp.org/news/how-to-flatten-a-dictionary-in-python-in-4-different-ways/ 
         dp_dict = self.assign_params(fake_design_point)

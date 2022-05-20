@@ -101,40 +101,25 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
     fw  = 50 - 4 # fallwinter_field_offset
 
     # night (midnight - 8am)
-    idf_sched_object.Field_4 = ...
-    idf_sched_object[f"Field_{4 + fw}"] = ...
-    dp_sched_object["night"]
+    idf_sched_object.Field_4 = idf_sched_object[f"Field_{4 + fw}"] = dp_sched_object["night"]
 
     # working hours -> morning (8am - noon) & (13 - 17)
-    idf_sched_object.Field_6 = ...
-    idf_sched_object.Field_10 =  ...
-    idf_sched_object[f"Field_{6 + fw}"] = ...
-    idf_sched_object[f"Field_{10 + fw}"] = ...
-    dp_sched_object["working_hours"] 
+    idf_sched_object.Field_6 = idf_sched_object.Field_10 =  idf_sched_object[f"Field_{6 + fw}"] = idf_sched_object[f"Field_{10 + fw}"] = dp_sched_object["working_hours"] 
 
     # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
-    idf_sched_object.Field_8 = ...
-    idf_sched_object.Field_12 = ...
-    idf_sched_object[f"Field_{8 + fw}"] = ...
-    idf_sched_object[f"Field_{12 + fw}"] = ...
-    dp_sched_object["break_hours"] 
+    idf_sched_object.Field_8 = idf_sched_object.Field_12 = idf_sched_object[f"Field_{8 + fw}"] = idf_sched_object[f"Field_{12 + fw}"] = dp_sched_object["break_hours"] 
 
     ## offseason -> summer (through 09/01)
     summ  = 27 - 4 # summer_field_offset
 
     # night (midnight - 8am)
-    idf_sched_object[f"Field_{4 + summ}"] = ...
-    dp_sched_object["night"] + dp_sched_object["offseason_fraction"]
+    idf_sched_object[f"Field_{4 + summ}"] = dp_sched_object["night"] + dp_sched_object["offseason_fraction"]
 
     # working hours -> morning (8am - noon) & (13 - 17)
-    idf_sched_object[f"Field_{6 + summ}"] = ...
-    idf_sched_object[f"Field_{10 + summ}"] = ...
-    dp_sched_object["offseason_fraction"] 
+    idf_sched_object[f"Field_{6 + summ}"] = idf_sched_object[f"Field_{10 + summ}"] = dp_sched_object["offseason_fraction"] 
 
     # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
-    idf_sched_object[f"Field_{8 + summ}"] = ...
-    idf_sched_object[f"Field_{12 + summ}"] = ...
-    dp_sched_object["offseason_fraction"] 
+    idf_sched_object[f"Field_{8 + summ}"] = idf_sched_object[f"Field_{12 + summ}"] = dp_sched_object["offseason_fraction"] 
 
 
 dp_sched = dp_dict["schedules"]
@@ -158,6 +143,9 @@ for k in use_types.keys():
 # --------- Run It   --------------------------
 
 new_dir_name = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19/th_05019_00"
+
+# save the updated idf 
+idf0.save(os.path.join(new_dir_name, "in3.idf"))
 
 # run the idf 
 idf0.run(output_directory=new_dir_name)
