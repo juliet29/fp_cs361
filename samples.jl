@@ -1,4 +1,7 @@
 using Primes
+using CSV
+using Tables
+using DataFrames
 
 function halton(i,b)
     result, f = 0.0, 1.0
@@ -16,5 +19,13 @@ function get_filling_set_halton(m, n)
     bs = primes(max(ceil(Int, n*(log(n) + log(log(n)))), 6))
     seqs = [get_filling_set_halton(m, b=b) for b in bs[1:n]]
     return [collect(x) for x in zip(seqs...)]
+    
+end
+
+function save_samples(m, n, name="samples")
+    samples = get_filling_set_halton(m, n)
+    df = DataFrame(samples, :auto)
+    CSV.write("samples/$name.csv", df)
+    return df
     
 end

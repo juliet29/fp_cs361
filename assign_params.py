@@ -112,7 +112,7 @@ class AssignParams:
 
     def make_a_dict(self, design_pt=False):
         if not design_pt:
-            random.seed(0)
+            random.seed(2)
             design_pt =  [random.random() for i in range(0,61)]
         
         # create the dictionary just using 0 params
