@@ -3,6 +3,7 @@
 """
 
 import random
+import flatdict
 
 class dotdict(dict):
     """dot.notation access to dictionary attributes"""
@@ -116,12 +117,22 @@ class AssignParams:
 
 
 
-    def make_a_dict(self):
-        fake_design_point = vars = [random.random() for i in range(0,61)]
+    def make_a_dict(self, design_pt=False):
+        if not design_pt:
+            design_pt =  [random.random() for i in range(0,61)]
         # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict
         # https://www.freecodecamp.org/news/how-to-flatten-a-dictionary-in-python-in-4-different-ways/ 
-        dp_dict = self.assign_params(fake_design_point)
-        return dp_dict
+        dp_dict = self.assign_params(design_pt)
+
+        # actually assign variables 
+        d =  flatdict.FlatDict(dp_dict, delimiter='.')
+        for key, v in zip(d,design_pt):
+            d[key] = v
+        final_dp_dict = d.as_dict()
+
+        print(final_dp_dict)
+
+        return final_dp_dict
 
 # dp_equip = dp_dict["default_vals"]["equipment"]
 # for name in zone_names:

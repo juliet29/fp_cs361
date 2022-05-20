@@ -47,6 +47,9 @@ glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
 # -- Constructions
 dp_constructions = dp_dict["materials"]["construction_r_vals"]
 
+# set floor and ceiling equal 
+dp_constructions["ceiling"] = dp_constructions["floor"]
+
 material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
 materials = idf0.idfobjects["Material:NoMass"]
 for type in material_types:
@@ -54,6 +57,8 @@ for type in material_types:
                if m.Name == f"{type}_VAR_MAT"][0]
     mat_obj.Thermal_Resistance = map_samples(
         dp_constructions[type.lower()], 0.01, 5)
+
+
 
 
 
@@ -113,13 +118,13 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
     summ  = 27 - 4 # summer_field_offset
 
     # night (midnight - 8am)
-    idf_sched_object[f"Field_{4 + summ}"] = dp_sched_object["night"] + dp_sched_object["offseason_fraction"]
+    idf_sched_object[f"Field_{4 + summ}"] = dp_sched_object["night"] * dp_sched_object["offseason_fraction"]
 
     # working hours -> morning (8am - noon) & (13 - 17)
-    idf_sched_object[f"Field_{6 + summ}"] = idf_sched_object[f"Field_{10 + summ}"] = dp_sched_object["offseason_fraction"] 
+    idf_sched_object[f"Field_{6 + summ}"] = idf_sched_object[f"Field_{10 + summ}"] = dp_sched_object["working_hours"]  * dp_sched_object["offseason_fraction"] 
 
     # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
-    idf_sched_object[f"Field_{8 + summ}"] = idf_sched_object[f"Field_{12 + summ}"] = dp_sched_object["offseason_fraction"] 
+    idf_sched_object[f"Field_{8 + summ}"] = idf_sched_object[f"Field_{12 + summ}"] = dp_sched_object["break_hours"] * dp_sched_object["offseason_fraction"] 
 
 
 dp_sched = dp_dict["schedules"]
