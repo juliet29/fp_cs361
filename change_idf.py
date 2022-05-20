@@ -69,23 +69,83 @@ def assign_default_values(value_type, zone_names, idf_key, object_key, domain):
 
 
 # -- Equipment
-zone_names = ["auditorium", "lab", "office"]
-assign_default_values("equipment", zone_names, "ElectricEquipment", "Watts_per_Zone_Floor_Area", [1,50])
+equip_zone_names = ["auditorium", "lab", "office"]
+assign_default_values("equipment", equip_zone_names, "ElectricEquipment", "Watts_per_Zone_Floor_Area", [1,50])
 
 # -- Light
-zone_names = ["auditorium", "lab", "office", "stairs"]
-assign_default_values("light", zone_names, "Lights", "Watts_per_Zone_Floor_Area", [1,15])
+light_zone_names = ["auditorium", "lab", "office", "stairs"]
+assign_default_values("light", light_zone_names, "Lights", "Watts_per_Zone_Floor_Area", [1,15])
 
 # --Infiltration 
-zone_names = ["bldg", "stairs"]
-assign_default_values("infiltration", zone_names, "ZoneInfiltration:DesignFlowRate", "Flow_per_Exterior_Surface_Area", [0.00001,0.008])
+infil_zone_names = ["bldg", "stairs"]
+assign_default_values("infiltration", infil_zone_names, "ZoneInfiltration:DesignFlowRate", "Flow_per_Exterior_Surface_Area", [0.00001,0.008])
 
 # -- Occupancy
-zone_names = ["bldg"]
-assign_default_values("occupancy", zone_names, "People", "People_per_Zone_Floor_Area", [0.001, 0.5])
+occ_zone_names = ["bldg"]
+assign_default_values("occupancy", occ_zone_names, "People", "People_per_Zone_Floor_Area", [0.001, 0.5])
 
 
 
 
 # --------- Schedules --------------------------
 # TODO inner fx to assign times to fields for a given zone and energy use type. outer function for zones 
+
+def assign_sched_values(idf_sched_object, dp_sched_object):
+    # these are use type and zone type specific
+
+    ## winterspring (through 06/01) and fallwinter (through 12/31)
+    fw  = 50 - 4 # fallwinter_field_offset
+
+    # night (midnight - 8am)
+    idf_sched_object.Field_4 = ...
+    idf_sched_object[f"Field{4 + fw}"] = ...
+    dp_sched_object["night"]
+
+    # working hours -> morning (8am - noon) & (13 - 17)
+    idf_sched_object.Field_6 = ...
+    idf_sched_object.Field_10 =  ...
+    idf_sched_object[f"Field{6 + fw}"] = ...
+    idf_sched_object[f"Field{10 + fw}"] = ...
+    dp_sched_object["working_hours"] 
+
+    # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
+    idf_sched_object.Field_8 = ...
+    idf_sched_object.Field_12 = ...
+    idf_sched_object[f"Field{8 + fw}"] = ...
+    idf_sched_object[f"Field{12 + fw}"] = ...
+    dp_sched_object["break_hours"] 
+
+    ## offseason -> summer (through 09/01)
+    summ  = 27 - 4 # summer_field_offset
+
+    # night (midnight - 8am)
+    idf_sched_object[f"Field{4 + summ}"] = ...
+    dp_sched_object["night"] + dp_sched_object["offseason_fraction"]
+
+    # working hours -> morning (8am - noon) & (13 - 17)
+    idf_sched_object[f"Field{6 + summ}"] = ...
+    idf_sched_object[f"Field{10 + summ}"] = ...
+    dp_sched_object["offseason_fraction"] 
+
+    # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
+    idf_sched_object[f"Field{8 + summ}"] = ...
+    idf_sched_object[f"Field{12 + summ}"] = ...
+    dp_sched_object["offseason_fraction"] 
+
+
+dp_sched = dp_dict["schedules"]
+
+use_types = {
+    "Equip": equip_zone_names,
+    "Light": light_zone_names,
+    "Infil": infil_zone_names,
+    "Occ": occ_zone_names
+}
+
+# use_types = ["equipment", "light", "infiltration", "occupancy"]
+for k in use_types.keys():
+    for v in use_types[k]: 
+        zone_obj = [m for m in [idf0.idfobjects["Schedule:Compact"]] if k in m.Name and v.title() in m.Name]
+        assign_sched_values(zone_obj, dp_sched[k.lower()][v])
+
+

@@ -48,7 +48,7 @@ class AssignParams:
 
             },
             "schedules": {
-                "equipment": {
+                "equip": {
                     "auditorium": {
                         "night": dp[0],
                         "working_hours": dp[0],
@@ -92,7 +92,7 @@ class AssignParams:
                         "break_hours": dp[0],
                         "offseason_fraction": dp[0], },
                 },
-                "infiltration": {
+                "infil": {
                     "bldg": {
                         "night": dp[0],
                         "working_hours": dp[0],
@@ -100,7 +100,7 @@ class AssignParams:
                         "offseason_fraction": dp[0], },
 
                 },
-                "occupancy": {
+                "occ": {
                     "bldg": {
                         "night": dp[0],
                         "working_hours": dp[0],
@@ -116,7 +116,8 @@ class AssignParams:
 
     def make_a_dict(self):
         fake_design_point = list(range(1,61)) 
-        # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict 
+        # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict
+        # https://www.freecodecamp.org/news/how-to-flatten-a-dictionary-in-python-in-4-different-ways/ 
         dp_dict = self.assign_params(fake_design_point)
         return dp_dict
 
