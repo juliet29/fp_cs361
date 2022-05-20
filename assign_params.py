@@ -5,110 +5,103 @@
 import random
 import flatdict
 
-class dotdict(dict):
-    """dot.notation access to dictionary attributes"""
-    __getattr__ = dict.get
-    __setattr__ = dict.__setitem__
-    __delattr__ = dict.__delitem__
-
 class AssignParams:
-    def assign_params(self, design_point):
-        dp = design_point
+    def create_param_dict(self):
         dp_dict = {
             "materials": {
                 "glazing": {
-                    "u_val": dp[0],
-                    "shgc": dp[0]
+                    "u_val": 0,
+                    "shgc": 0
                 },
                 "construction_r_vals": {
-                    "ceiling": dp[0],
-                    "roof": dp[0],
-                    "floor": dp[0],
-                    "interior_wall": dp[0],
-                    "exterior_wall": dp[0],
+                    "ceiling": 0,
+                    "roof": 0,
+                    "floor": 0,
+                    "interior_wall": 0,
+                    "exterior_wall": 0,
                 }
 
             },
             "default_vals": {
                 "equipment": {
-                    "auditorium": dp[0],
-                    "lab": dp[0],
-                    "office": dp[0],
+                    "auditorium": 0,
+                    "lab": 0,
+                    "office": 0,
                 },
                 "light": {
-                    "auditorium": dp[0],
-                    "lab": dp[0],
-                    "office": dp[0],
-                    "stairs": dp[0],
+                    "auditorium": 0,
+                    "lab": 0,
+                    "office": 0,
+                    "stairs": 0,
                 },
                 "infiltration": {
-                    "bldg": dp[0],
-                    "stairs": dp[0],
+                    "bldg": 0,
+                    "stairs": 0,
                 },
                 "occupancy": {
-                    "bldg": dp[0],
+                    "bldg": 0,
                 }
 
             },
             "schedules": {
                 "equip": {
                     "auditorium": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0],
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0,
                     },
                     "lab": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0],
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0,
 
                     },
                     "office": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0],
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0,
 
                     }
                 },
                 "light": {
                     "auditorium": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
                     "lab": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
                     "office": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
                     "stairs": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
                 },
                 "infil": {
                     "bldg": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
 
                 },
                 "occ": {
                     "bldg": {
-                        "night": dp[0],
-                        "working_hours": dp[0],
-                        "break_hours": dp[0],
-                        "offseason_fraction": dp[0], },
+                        "night": 0,
+                        "working_hours": 0,
+                        "break_hours": 0,
+                        "offseason_fraction": 0, },
                 }
 
             }
@@ -119,10 +112,11 @@ class AssignParams:
 
     def make_a_dict(self, design_pt=False):
         if not design_pt:
+            random.seed(0)
             design_pt =  [random.random() for i in range(0,61)]
-        # TODO  flatten dict and match indices of design point to flattend dict and then unflatten / turn into an ordered dict
-        # https://www.freecodecamp.org/news/how-to-flatten-a-dictionary-in-python-in-4-different-ways/ 
-        dp_dict = self.assign_params(design_pt)
+        
+        # create the dictionary just using 0 params
+        dp_dict = self.create_param_dict()
 
         # actually assign variables 
         d =  flatdict.FlatDict(dp_dict, delimiter='.')
@@ -130,12 +124,6 @@ class AssignParams:
             d[key] = v
         final_dp_dict = d.as_dict()
 
-        print(final_dp_dict)
 
         return final_dp_dict
 
-# dp_equip = dp_dict["default_vals"]["equipment"]
-# for name in zone_names:
-#     zone_obj = [m for m in [idf0.idfobjects["ElectricEquipment"]] if name in m.Schedule_Name]
-#     zone_obj.Watts_per_Zone_Floor_Area = map_samples(
-#         dp_equip[name], 1, 50)
