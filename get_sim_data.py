@@ -19,7 +19,7 @@ def get_sim_data(batch_path, num_sims, batch_name):
 
             sqld = SQLiteResult(sql_file)
 
-            # get all electricity data for the sample 
+            # get all electricity data for the sample (in joules [J])
             elect = sqld.tabular_data_by_name("Custom Monthly Report")
 
             # get elect data for each month (sum of lights + equip)
@@ -46,7 +46,7 @@ def get_sim_data(batch_path, num_sims, batch_name):
 def main():
     batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19/05_20_batch_00_06"
     num_sims = 100
-    batch_name = "05_20_batch_00_06"
+    batch_name = "0520_batch_00_06"
     get_sim_data(batch_path, num_sims, batch_name)
 
 
