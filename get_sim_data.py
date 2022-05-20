@@ -13,6 +13,7 @@ def get_sim_data(batch_path, num_sims, batch_name):
     all_samples = []
 
     for i in range(num_sims):
+        i+=1 # samples are 1 indexed
         try: 
             sql_file = f"{batch_path}/sample_{i}/eplusout.sql"
 
