@@ -12,7 +12,7 @@ K(X, X′, k) = [k(x, x′) for x in X, x′ in X′]
 k(x, x′, l) = exp(-(x - x′)^2 / 2*l^2 )
 
 mutable struct GaussianProcess
-    m # mean 
+    m # mean function
     k # covariance function
     X # design points
     y # objective values
@@ -22,15 +22,16 @@ end
 # sample from multivariate gaussian distribution 
 # add inflation factor to prevent numerical issues
 function mvnrand(μ, Σ, inflation=1e-6)
-    N = MvNormal(μ, Σ + inflation=1e-6*I)
+    println("problem no dey finish")
+    N = MvNormal(μ, Σ + inflation*I)
+    println("huya")
     return rand(N)
-    
 end
 
 # sample from gaussian process at the given design points in a matrix X
 Base.rand(GP, X) = mvnrand(μ(X, GP.m), Σ(X, GP.k))
 
-# obtain predict means and standard deviations in f under a GP
+# obtain predicted means and standard deviations in f under a GP
 # takes in a GP and list of points X_pred to evaluate
 # return mean and variance at each point 
 function predict(GP, X_pred)
@@ -39,7 +40,6 @@ function predict(GP, X_pred)
     μₚ = μ(X_pred, m) + tmp*(GP.y - μ(GP.X, m))
     S = K(X_pred, X_pred, k) - tmp*K(GP.X, X_pred, k)
     νₚ = diag(S) .+ eps()
-    return (μₚ, νₚ)
-    
+    return (μₚ, νₚ) 
 end
 
