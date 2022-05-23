@@ -9,7 +9,7 @@ using Optim
 # matrix of design points
 dp_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/0520_samples.csv"
 dp_data = DataFrame(CSV.File(dp_path))
-X = Matrix(dp_data) # 61 * 100
+X = Matrix(dp_data)' # 61 * 100 --> now 100 * 61
 
 
 # "objective" values 
@@ -28,29 +28,29 @@ for i=1:size(Y,2)
     append!(y, rmsd(Y[:, i], h, normalize=true))
 end
 
-# Zero mean function
-mZero = MeanZero()  
-# constant mean 
-mConst = MeanConst(2.0)
-# m(x) = x # dummy mean function
+# # Zero mean function
+# mZero = MeanZero()  
+# # constant mean 
+# mConst = MeanConst(2.0)
+# # m(x) = x # dummy mean function
 
-# Sum kernel with Matern 5/2 ARD kernel 
-# with parameters [log(ℓ₁), log(ℓ₂)] = [0,0] and log(σ) = 0
-# and Squared Exponential Iso kernel with
-# parameters log(ℓ) = 0 and log(σ) = 0
-zero_d = zeros(61)
-kern = Matern(5/2,zero_d,0.0) + SE(0,0)
+# # Sum kernel with Matern 5/2 ARD kernel 
+# # with parameters [log(ℓ₁), log(ℓ₂)] = [0,0] and log(σ) = 0
+# # and Squared Exponential Iso kernel with
+# # parameters log(ℓ) = 0 and log(σ) = 0
+# zero_d = zeros(61)
+# kern = Matern(5/2,zero_d,0.0) + SE(0,0)
 
-# # d, n = 2, 50;         #Dimension and number of observations
-# x = 2π * rand(d, n);    size =  2x50                          #Predictors
-# y2 = vec(sin.(x[1,:]).*sin.(x[2,:])) + 0.05*rand(n);
+# # # d, n = 2, 50;         #Dimension and number of observations
+# # x = 2π * rand(d, n);    size =  2x50                          #Predictors
+# # y2 = vec(sin.(x[1,:]).*sin.(x[2,:])) + 0.05*rand(n);
 
-gp = GaussianProcesses.GP(X,y,mConst ,kern,-2.0)   
+# gp = GaussianProcesses.GP(X,y,mConst ,kern,-2.0)   
 
-# xpred = [i for i in range(0.1, 1, 9), j in 1:61]'
-xpred =  rand(61,10)
-mu, σ² = predict_y(gp,xpred)
-f = predict_f(gp,xpred)
+# # xpred = [i for i in range(0.1, 1, 9), j in 1:61]'
+# xpred =  rand(61,10)
+# mu, σ² = predict_y(gp,xpred)
+# f = predict_f(gp,xpred)
 
 
 # optimize!(gp; method=ConjugateGradient())
