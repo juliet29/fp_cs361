@@ -1,8 +1,8 @@
 using CSV
 using DataFrames
 using StatsBase
-using GaussianProcesses
-using Optim
+# using GaussianProcesses
+# using Optim
 
 # include("gp.jl")
 
@@ -25,7 +25,7 @@ h = Matrix(hist_data) # 12 * 1
 # normalized rmse (not comprable to ASHRAE standards??)
 y = []
 for i=1:size(Y,2)
-    append!(y, rmsd(Y[:, i], h, normalize=true))
+    append!(y, rmsd(Y[:, i], h, normalize=false))
 end
 
 # # Zero mean function

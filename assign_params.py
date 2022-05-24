@@ -120,10 +120,16 @@ class AssignParams:
 
         # actually assign variables 
         d =  flatdict.FlatDict(dp_dict, delimiter='.')
+        print(len(d))
         for key, v in zip(d,design_pt):
             d[key] = v
         final_dp_dict = d.as_dict()
 
 
         return final_dp_dict
+
+
+
+a = AssignParams()
+a.make_a_dict()
 

@@ -1,5 +1,6 @@
 using LinearAlgebra
 using Random
+using Statistics
 
 """
 design_matrix(x)
@@ -19,7 +20,7 @@ end
 # linear regression 
 function linear_regression(X,y)
     θ = pinv(design_matrix(X))*y
-    println("predictions for this x: $(design_matrix(x) * θ )")
+    # println("predictions for this x: $(design_matrix(x) * θ )")
     return x -> design_matrix(x) * θ 
 
     # TODO post on ed!
@@ -87,7 +88,7 @@ function random_subsampling(X, y; k_max=10)
     # fit = linear_regression
     # metric = metric_rmse
     h=div(size(X,1),2)
-    println(h)
+    println("holdout = h")
     m = size(X,1)
     metrics = []
     for k in 1:k_max
