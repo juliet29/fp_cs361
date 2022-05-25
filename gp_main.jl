@@ -66,7 +66,7 @@ function fpred(X)
     # println("x shape $(size(Xo))")
     y = MLJ.predict(mach, Xo)[1]
     if y <= 0 
-        y = y + 10e6
+        y = y + 10e7
     end 
     # println("y shape $(size(y))")
     # println("y $(y)")
