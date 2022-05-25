@@ -1,10 +1,13 @@
 using CSV
 using DataFrames
 using StatsBase
+using MLJ
 # using GaussianProcesses
 # using Optim
 
 # include("gp.jl")
+
+# ----- Get Data --------
 
 # matrix of design points
 dp_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/0520_samples.csv"
@@ -28,39 +31,43 @@ for i=1:size(Y,2)
     append!(y, rmsd(Y[:, i], h, normalize=false))
 end
 
-# # Zero mean function
-# mZero = MeanZero()  
-# # constant mean 
-# mConst = MeanConst(2.0)
-# # m(x) = x # dummy mean function
+#  ----- GP Implementation Using MLJ --------
 
-# # Sum kernel with Matern 5/2 ARD kernel 
-# # with parameters [log(ℓ₁), log(ℓ₂)] = [0,0] and log(σ) = 0
-# # and Squared Exponential Iso kernel with
-# # parameters log(ℓ) = 0 and log(σ) = 0
-# zero_d = zeros(61)
-# kern = Matern(5/2,zero_d,0.0) + SE(0,0)
+##  Data Conversion 
+y = convert(Array{Float64,1}, y./10e9);
 
-# # # d, n = 2, 50;         #Dimension and number of observations
-# # x = 2π * rand(d, n);    size =  2x50                          #Predictors
-# # y2 = vec(sin.(x[1,:]).*sin.(x[2,:])) + 0.05*rand(n);
-
-# gp = GaussianProcesses.GP(X,y,mConst ,kern,-2.0)   
-
-# # xpred = [i for i in range(0.1, 1, 9), j in 1:61]'
-# xpred =  rand(61,10)
-# mu, σ² = predict_y(gp,xpred)
-# f = predict_f(gp,xpred)
+# convert X from matrix to table 
+Xtable = MLJ.table(X./10e9)
+println(scitype(Xtable))
+schema(Xtable);
 
 
-# optimize!(gp; method=ConjugateGradient())
+# load the model 
+GPModel = @load GaussianProcessRegressor pkg="ScikitLearn" verbosity=0
 
-# # functions
- 
-# k(x, x′, l=1) = exp(-(x - x′)^2 / 2*l^2 ) # squared exponential kernel function 
+# create an instance of the model 
+gpmodel = GPModel()
 
-# # Σ -> Σ(X,k) 61×100×61×100 -> 61 * 100 of 61 x 100 matrices!
+# small hyperparameter tuning 
+r = MLJ.range(gpmodel, :alpha, lower=10e-12, upper=10e-5, scale=:log);
+self_tuning_gpmodel = TunedModel(model=gpmodel,
+							  resampling=CV(nfolds=3),
+							  tuning=Grid(resolution=10),
+							  range=r,
+							  measure=rms);
 
-# GP = GaussianProcess(m, k, X, y, 0);
-# # mu => size 61, 100
-# # sigma => size (61, 100, 61, 100)
+# create and fit the machine
+mach = machine(self_tuning_gpmodel, Xtable, y);
+MLJ.fit!(mach, verbosity=0)
+
+# function that predicts y given our GP
+function fpred(X)
+    Xo = reshape(X, length(X), 1)'
+    # println("x shape $(size(Xo))")
+    y = MLJ.predict(mach, Xo)
+    # println("y shape $(size(y))")
+    # println("y $(y)")
+    return y[1]
+end
+
+

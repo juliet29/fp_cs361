@@ -1,0 +1,2724 @@
+!- Darwin Line endings 
+
+Version,
+    9.4;                      !- Version Identifier
+
+SimulationControl,
+    No,                       !- Do Zone Sizing Calculation
+    No,                       !- Do System Sizing Calculation
+    No,                       !- Do Plant Sizing Calculation
+    Yes,                      !- Run Simulation for Sizing Periods
+    Yes,                      !- Run Simulation for Weather File Run Periods
+    ,                         !- Do HVAC Sizing Simulation for Sizing Periods
+    ;                         !- Maximum Number of HVAC Sizing Simulation Passes
+
+Building,
+    Thornton_09,              !- Name
+    ,                         !- North Axis
+    ,                         !- Terrain
+    ,                         !- Loads Convergence Tolerance Value
+    ,                         !- Temperature Convergence Tolerance Value
+    ,                         !- Solar Distribution
+    ,                         !- Maximum Number of Warmup Days
+    ;                         !- Minimum Number of Warmup Days
+
+ShadowCalculation,
+    PolygonClipping,          !- Shading Calculation Method
+    Periodic,                 !- Shading Calculation Update Frequency Method
+    7,                        !- Shading Calculation Update Frequency
+    15000,                    !- Maximum Figures in Shadow Overlap Calculations
+    SutherlandHodgman,        !- Polygon Clipping Algorithm
+    512,                      !- Pixel Counting Resolution
+    SimpleSkyDiffuseModeling,    !- Sky Diffuse Modeling Algorithm
+    No,                       !- Output External Shading Calculation Results
+    No,                       !- Disable SelfShading Within Shading Zone Groups
+    No;                       !- Disable SelfShading From Shading Zone Groups to Other Zones
+
+SurfaceConvectionAlgorithm:Inside,
+    TARP;                     !- Algorithm
+
+SurfaceConvectionAlgorithm:Outside,
+    DOE-2;                    !- Algorithm
+
+HeatBalanceAlgorithm,
+    ConductionTransferFunction,    !- Algorithm
+    200;                      !- Surface Temperature Upper Limit
+
+ZoneAirHeatBalanceAlgorithm,
+    AnalyticalSolution;       !- Algorithm
+
+ZoneAirContaminantBalance,
+    No;                       !- Carbon Dioxide Concentration
+
+ZoneCapacitanceMultiplier:ResearchSpecial,
+    Zone Capacitance Multiplier Research Special,    !- Name
+    ,                         !- Zone or ZoneList Name
+    ,                         !- Temperature Capacity Multiplier
+    ,                         !- Humidity Capacity Multiplier
+    ,                         !- Carbon Dioxide Capacity Multiplier
+    ;                         !- Generic Contaminant Capacity Multiplier
+
+Timestep,
+    6;                        !- Number of Timesteps per Hour
+
+ConvergenceLimits,
+    1;                        !- Minimum System Timestep
+
+Site:Location,
+    CA_PALO-ALTO-AP,          !- Name
+    37.47,                    !- Latitude
+    -122.12,                  !- Longitude
+    -8,                       !- Time Zone
+    2;                        !- Elevation
+
+RunPeriod,
+    Run Period 1,             !- Name
+    1,                        !- Begin Month
+    1,                        !- Begin Day of Month
+    2019,                     !- Begin Year
+    12,                       !- End Month
+    31,                       !- End Day of Month
+    2019,                     !- End Year
+    Tuesday,                  !- Day of Week for Start Day
+    No,                       !- Use Weather File Holidays and Special Days
+    No,                       !- Use Weather File Daylight Saving Period
+    No,                       !- Apply Weekend Holiday Rule
+    Yes,                      !- Use Weather File Rain Indicators
+    Yes;                      !- Use Weather File Snow Indicators
+
+ScheduleTypeLimits,
+    ActivityLevel,            !- Name
+    0,                        !- Lower Limit Value
+    ,                         !- Upper Limit Value
+    Continuous,               !- Numeric Type
+    activitylevel;            !- Unit Type
+
+ScheduleTypeLimits,
+    ActivityLevel 12,         !- Name
+    0,                        !- Lower Limit Value
+    ,                         !- Upper Limit Value
+    Continuous,               !- Numeric Type
+    activitylevel;            !- Unit Type
+
+ScheduleTypeLimits,
+    ActivityLevel 13,         !- Name
+    0,                        !- Lower Limit Value
+    ,                         !- Upper Limit Value
+    Continuous,               !- Numeric Type
+    activitylevel;            !- Unit Type
+
+ScheduleTypeLimits,
+    ActivityLevel 2,          !- Name
+    0,                        !- Lower Limit Value
+    ,                         !- Upper Limit Value
+    Continuous,               !- Numeric Type
+    activitylevel;            !- Unit Type
+
+ScheduleTypeLimits,
+    ActivityLevel 5,          !- Name
+    0,                        !- Lower Limit Value
+    ,                         !- Upper Limit Value
+    Continuous,               !- Numeric Type
+    activitylevel;            !- Unit Type
+
+ScheduleTypeLimits,
+    Always On Discrete Limits,    !- Name
+    0,                        !- Lower Limit Value
+    1,                        !- Upper Limit Value
+    Discrete,                 !- Numeric Type
+    availability;             !- Unit Type
+
+ScheduleTypeLimits,
+    Fraction,                 !- Name
+    0,                        !- Lower Limit Value
+    1,                        !- Upper Limit Value
+    CONTINUOUS;               !- Numeric Type
+
+Schedule:Compact,
+    Bldg Activity,            !- Name
+    ActivityLevel,            !- Schedule Type Limits Name
+    Through: 12/31,           !- Field 1
+    For: AllDays,             !- Field 2
+    Until: 24:00,             !- Field 3
+    132;                      !- Field 4
+
+Schedule:Compact,
+    Stairs Infil,             !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 12/31,           !- Field 1
+    For: AllDays,             !- Field 2
+    Until: 24:00,             !- Field 3
+    1;                        !- Field 4
+
+Schedule:Compact,
+    Bldg Occ,                 !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.3,                      !- Field 4
+    Until: 12:00,             !- Field 5
+    0.95,                     !- Field 6
+    Until: 13:00,             !- Field 7
+    0.5,                      !- Field 8
+    Until: 17:00,             !- Field 9
+    0.95,                     !- Field 10
+    Until: 24:00,             !- Field 11
+    0.3,                      !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.2,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.2,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    0.1,                      !- Field 27
+    Until: 12:00,             !- Field 28
+    0.4,                      !- Field 29
+    Until: 13:00,             !- Field 30
+    0.2,                      !- Field 31
+    Until: 17:00,             !- Field 32
+    0.4,                      !- Field 33
+    Until: 24:00,             !- Field 34
+    0.2,                      !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.1,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.1,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.3,                      !- Field 50
+    Until: 12:00,             !- Field 51
+    0.95,                     !- Field 52
+    Until: 13:00,             !- Field 53
+    0.5,                      !- Field 54
+    Until: 17:00,             !- Field 55
+    0.95,                     !- Field 56
+    Until: 24:00,             !- Field 57
+    0.3,                      !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.2,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.2;                      !- Field 69
+
+Schedule:Compact,
+    Bldg Infil,               !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 12/31,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    1,                        !- Field 4
+    Until: 12:00,             !- Field 5
+    1,                        !- Field 6
+    Until: 13:00,             !- Field 7
+    1,                        !- Field 8
+    Until: 17:00,             !- Field 9
+    1,                        !- Field 10
+    Until: 24:00,             !- Field 11
+    1,                        !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    1,                        !- Field 21
+    Until: 24:00,             !- Field 22
+    1;                        !- Field 23
+
+Schedule:Compact,
+    Stairs Light,             !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0134228187919463,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.0132450331125827,       !- Field 6
+    Until: 13:00,             !- Field 7
+    0.0127388535031847,       !- Field 8
+    Until: 17:00,             !- Field 9
+    0.0132450331125827,       !- Field 10
+    Until: 24:00,             !- Field 11
+    0.0127388535031847,       !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    1.646972e-04,             !- Field 27
+    Until: 12:00,             !- Field 28
+    1.625157e-04,             !- Field 29
+    Until: 13:00,             !- Field 30
+    1.563050e-04,             !- Field 31
+    Until: 17:00,             !- Field 32
+    1.625157e-04,             !- Field 33
+    Until: 24:00,             !- Field 34
+    1.563050e-04,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0134228187919463,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.0132450331125827,       !- Field 52
+    Until: 13:00,             !- Field 53
+    0.0127388535031847,       !- Field 54
+    Until: 17:00,             !- Field 55
+    0.0132450331125827,       !- Field 56
+    Until: 24:00,             !- Field 57
+    0.0127388535031847,       !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Auditorium Light,         !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0240963855421686,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.0224719101123595,       !- Field 6
+    Until: 13:00,             !- Field 7
+    0.0206185567010309,       !- Field 8
+    Until: 17:00,             !- Field 9
+    0.0224719101123595,       !- Field 10
+    Until: 24:00,             !- Field 11
+    0.0206185567010309,       !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    4.771561e-04,             !- Field 27
+    Until: 12:00,             !- Field 28
+    4.449883e-04,             !- Field 29
+    Until: 13:00,             !- Field 30
+    4.082883e-04,             !- Field 31
+    Until: 17:00,             !- Field 32
+    4.449883e-04,             !- Field 33
+    Until: 24:00,             !- Field 34
+    4.082883e-04,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0240963855421686,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.0224719101123595,       !- Field 52
+    Until: 13:00,             !- Field 53
+    0.0206185567010309,       !- Field 54
+    Until: 17:00,             !- Field 55
+    0.0224719101123595,       !- Field 56
+    Until: 24:00,             !- Field 57
+    0.0206185567010309,       !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Auditorium Equip,         !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.064516129032258,        !- Field 4
+    Until: 12:00,             !- Field 5
+    0.054054054054054,        !- Field 6
+    Until: 13:00,             !- Field 7
+    0.048780487804878,        !- Field 8
+    Until: 17:00,             !- Field 9
+    0.054054054054054,        !- Field 10
+    Until: 24:00,             !- Field 11
+    0.048780487804878,        !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    3.000750e-03,             !- Field 27
+    Until: 12:00,             !- Field 28
+    2.514142e-03,             !- Field 29
+    Until: 13:00,             !- Field 30
+    2.268860e-03,             !- Field 31
+    Until: 17:00,             !- Field 32
+    2.514142e-03,             !- Field 33
+    Until: 24:00,             !- Field 34
+    2.268860e-03,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.064516129032258,        !- Field 50
+    Until: 12:00,             !- Field 51
+    0.054054054054054,        !- Field 52
+    Until: 13:00,             !- Field 53
+    0.048780487804878,        !- Field 54
+    Until: 17:00,             !- Field 55
+    0.054054054054054,        !- Field 56
+    Until: 24:00,             !- Field 57
+    0.048780487804878,        !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Lab Light,                !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0194174757281553,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.0186915887850467,       !- Field 6
+    Until: 13:00,             !- Field 7
+    0.018348623853211,        !- Field 8
+    Until: 17:00,             !- Field 9
+    0.0186915887850467,       !- Field 10
+    Until: 24:00,             !- Field 11
+    0.018348623853211,        !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    3.436721e-04,             !- Field 27
+    Until: 12:00,             !- Field 28
+    3.308246e-04,             !- Field 29
+    Until: 13:00,             !- Field 30
+    3.247544e-04,             !- Field 31
+    Until: 17:00,             !- Field 32
+    3.308246e-04,             !- Field 33
+    Until: 24:00,             !- Field 34
+    3.247544e-04,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0194174757281553,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.0186915887850467,       !- Field 52
+    Until: 13:00,             !- Field 53
+    0.018348623853211,        !- Field 54
+    Until: 17:00,             !- Field 55
+    0.0186915887850467,       !- Field 56
+    Until: 24:00,             !- Field 57
+    0.018348623853211,        !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Lab Equip,                !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0425531914893617,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.0377358490566037,       !- Field 6
+    Until: 13:00,             !- Field 7
+    0.0338983050847457,       !- Field 8
+    Until: 17:00,             !- Field 9
+    0.0377358490566037,       !- Field 10
+    Until: 24:00,             !- Field 11
+    0.0338983050847457,       !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    1.395187e-03,             !- Field 27
+    Until: 12:00,             !- Field 28
+    1.237241e-03,             !- Field 29
+    Until: 13:00,             !- Field 30
+    1.111420e-03,             !- Field 31
+    Until: 17:00,             !- Field 32
+    1.237241e-03,             !- Field 33
+    Until: 24:00,             !- Field 34
+    1.111420e-03,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0425531914893617,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.0377358490566037,       !- Field 52
+    Until: 13:00,             !- Field 53
+    0.0338983050847457,       !- Field 54
+    Until: 17:00,             !- Field 55
+    0.0377358490566037,       !- Field 56
+    Until: 24:00,             !- Field 57
+    0.0338983050847457,       !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Office Light,             !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0157480314960629,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.015267175572519,        !- Field 6
+    Until: 13:00,             !- Field 7
+    0.0145985401459854,       !- Field 8
+    Until: 17:00,             !- Field 9
+    0.015267175572519,        !- Field 10
+    Until: 24:00,             !- Field 11
+    0.0145985401459854,       !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    2.265904e-04,             !- Field 27
+    Until: 12:00,             !- Field 28
+    2.196716e-04,             !- Field 29
+    Until: 13:00,             !- Field 30
+    2.100509e-04,             !- Field 31
+    Until: 17:00,             !- Field 32
+    2.196716e-04,             !- Field 33
+    Until: 24:00,             !- Field 34
+    2.100509e-04,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0157480314960629,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.015267175572519,        !- Field 52
+    Until: 13:00,             !- Field 53
+    0.0145985401459854,       !- Field 54
+    Until: 17:00,             !- Field 55
+    0.015267175572519,        !- Field 56
+    Until: 24:00,             !- Field 57
+    0.0145985401459854,       !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Compact,
+    Office Equip,             !- Name
+    Fraction,                 !- Schedule Type Limits Name
+    Through: 06/01,           !- Field 1
+    For: Weekdays,            !- Field 2
+    Until: 8:00,              !- Field 3
+    0.0298507462686567,       !- Field 4
+    Until: 12:00,             !- Field 5
+    0.028169014084507,        !- Field 6
+    Until: 13:00,             !- Field 7
+    0.0273972602739726,       !- Field 8
+    Until: 17:00,             !- Field 9
+    0.028169014084507,        !- Field 10
+    Until: 24:00,             !- Field 11
+    0.0273972602739726,       !- Field 12
+    For: SummerDesignDay,     !- Field 13
+    Until: 24:00,             !- Field 14
+    1,                        !- Field 15
+    For: WinterDesignDay,     !- Field 16
+    Until: 24:00,             !- Field 17
+    0,                        !- Field 18
+    For: Weekends Holidays AllOtherDays,    !- Field 19
+    Until: 8:00,              !- Field 20
+    0.5,                      !- Field 21
+    Until: 24:00,             !- Field 22
+    0.5,                      !- Field 23
+    Through: 10/01,           !- Field 24
+    For: Weekdays,            !- Field 25
+    Until: 8:00,              !- Field 26
+    7.557151e-04,             !- Field 27
+    Until: 12:00,             !- Field 28
+    7.131396e-04,             !- Field 29
+    Until: 13:00,             !- Field 30
+    6.936015e-04,             !- Field 31
+    Until: 17:00,             !- Field 32
+    7.131396e-04,             !- Field 33
+    Until: 24:00,             !- Field 34
+    6.936015e-04,             !- Field 35
+    For: SummerDesignDay,     !- Field 36
+    Until: 24:00,             !- Field 37
+    1,                        !- Field 38
+    For: WinterDesignDay,     !- Field 39
+    Until: 24:00,             !- Field 40
+    0,                        !- Field 41
+    For: Weekends Holidays AllOtherDays,    !- Field 42
+    Until: 8:00,              !- Field 43
+    0.5,                      !- Field 44
+    Until: 24:00,             !- Field 45
+    0.5,                      !- Field 46
+    Through: 12/31,           !- Field 47
+    For: Weekdays,            !- Field 48
+    Until: 8:00,              !- Field 49
+    0.0298507462686567,       !- Field 50
+    Until: 12:00,             !- Field 51
+    0.028169014084507,        !- Field 52
+    Until: 13:00,             !- Field 53
+    0.0273972602739726,       !- Field 54
+    Until: 17:00,             !- Field 55
+    0.028169014084507,        !- Field 56
+    Until: 24:00,             !- Field 57
+    0.0273972602739726,       !- Field 58
+    For: SummerDesignDay,     !- Field 59
+    Until: 24:00,             !- Field 60
+    1,                        !- Field 61
+    For: WinterDesignDay,     !- Field 62
+    Until: 24:00,             !- Field 63
+    0,                        !- Field 64
+    For: Weekends Holidays AllOtherDays,    !- Field 65
+    Until: 8:00,              !- Field 66
+    0.5,                      !- Field 67
+    Until: 24:00,             !- Field 68
+    0.5;                      !- Field 69
+
+Schedule:Constant,
+    Always On Discrete,       !- Name
+    Always On Discrete Limits,    !- Schedule Type Limits Name
+    1;                        !- Hourly Value
+
+Schedule:Constant,
+    Always Off Discrete,      !- Name
+    ,                         !- Schedule Type Limits Name
+    0;                        !- Hourly Value
+
+Schedule:Constant,
+    Always On Continuous,     !- Name
+    ,                         !- Schedule Type Limits Name
+    1;                        !- Hourly Value
+
+Material,
+    MAT-CC05 4 HW CONCRETE,    !- Name
+    Rough,                    !- Roughness
+    0.1016,                   !- Thickness
+    1.311,                    !- Conductivity
+    2240,                     !- Density
+    836.800000000001,         !- Specific Heat
+    0.9,                      !- Thermal Absorptance
+    0.85,                     !- Solar Absorptance
+    0.85;                     !- Visible Absorptance
+
+Material:NoMass,
+    CP02 CARPET PAD,          !- Name
+    Smooth,                   !- Roughness
+    0.1,                      !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+Material:NoMass,
+    MAT-SHEATH,               !- Name
+    Smooth,                   !- Roughness
+    3,                        !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+Material:NoMass,
+    VAR_MAT,                  !- Name
+    Smooth,                   !- Roughness
+    3,                        !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+MATERIAL:NOMASS,
+    CEILING_VAR_MAT,          !- Name
+    Smooth,                   !- Roughness
+    4.4,                      !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+MATERIAL:NOMASS,
+    ROOF_VAR_MAT,             !- Name
+    Smooth,                   !- Roughness
+    5.28,                     !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+MATERIAL:NOMASS,
+    FLOOR_VAR_MAT,            !- Name
+    Smooth,                   !- Roughness
+    4.4,                      !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+MATERIAL:NOMASS,
+    INTERIOR_WALL_VAR_MAT,    !- Name
+    Smooth,                   !- Roughness
+    2.29,                     !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+MATERIAL:NOMASS,
+    EXTERIOR_WALL_VAR_MAT,    !- Name
+    Smooth,                   !- Roughness
+    2.64,                     !- Thermal Resistance
+    0.9,                      !- Thermal Absorptance
+    0.7,                      !- Solar Absorptance
+    0.7;                      !- Visible Absorptance
+
+WindowMaterial:SimpleGlazingSystem,
+    VAR_GLAZE,                !- Name
+    1.9,                      !- UFactor
+    0.3;                      !- Solar Heat Gain Coefficient
+
+Construction,
+    ASHRAE 189.1-2009 ExtWall SteelFrame ClimateZone 1-3,    !- Name
+    MAT-CC05 4 HW CONCRETE;    !- Outside Layer
+
+Construction,
+    ExtSlabCarpet 4in ClimateZone 1-8,    !- Name
+    MAT-CC05 4 HW CONCRETE;    !- Outside Layer
+
+Construction,
+    VAR_CONST,                !- Name
+    VAR_MAT;                  !- Outside Layer
+
+Construction,
+    VAR_GLAZE_CONST,          !- Name
+    VAR_GLAZE;                !- Outside Layer
+
+CONSTRUCTION,
+    CEILING_VAR_CONST,        !- Name
+    CEILING_VAR_MAT;          !- Outside Layer
+
+CONSTRUCTION,
+    ROOF_VAR_CONST,           !- Name
+    ROOF_VAR_MAT;             !- Outside Layer
+
+CONSTRUCTION,
+    FLOOR_VAR_CONST,          !- Name
+    FLOOR_VAR_MAT;            !- Outside Layer
+
+CONSTRUCTION,
+    INTERIOR_WALL_VAR_CONST,    !- Name
+    INTERIOR_WALL_VAR_MAT;    !- Outside Layer
+
+CONSTRUCTION,
+    EXTERIOR_WALL_VAR_CONST,    !- Name
+    EXTERIOR_WALL_VAR_MAT;    !- Outside Layer
+
+GlobalGeometryRules,
+    UpperLeftCorner,          !- Starting Vertex Position
+    Counterclockwise,         !- Vertex Entry Direction
+    Relative,                 !- Coordinate System
+    Relative,                 !- Daylighting Reference Point Coordinate System
+    Relative;                 !- Rectangular Surface Coordinate System
+
+Zone,
+    Auditorium,               !- Name
+    0,                        !- Direction of Relative North
+    13.8684,                  !- X Origin
+    13.8684,                  !- Y Origin
+    0,                        !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+Zone,
+    BigAuditorium,            !- Name
+    0,                        !- Direction of Relative North
+    20.193,                   !- X Origin
+    0,                        !- Y Origin
+    0,                        !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+Zone,
+    Lab,                      !- Name
+    0,                        !- Direction of Relative North
+    13.8684,                  !- X Origin
+    13.8684,                  !- Y Origin
+    4.4196,                   !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+Zone,
+    Offices,                  !- Name
+    0,                        !- Direction of Relative North
+    20.193,                   !- X Origin
+    0,                        !- Y Origin
+    4.4196,                   !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+Zone,
+    Stairs,                   !- Name
+    0,                        !- Direction of Relative North
+    20.193,                   !- X Origin
+    0,                        !- Y Origin
+    0,                        !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+Zone,
+    TopStairs,                !- Name
+    0,                        !- Direction of Relative North
+    20.193,                   !- X Origin
+    0,                        !- Y Origin
+    4.4196,                   !- Z Origin
+    ,                         !- Type
+    1,                        !- Multiplier
+    ,                         !- Ceiling Height
+    ,                         !- Volume
+    ,                         !- Floor Area
+    ,                         !- Zone Inside Convection Algorithm
+    ,                         !- Zone Outside Convection Algorithm
+    Yes;                      !- Part of Total Floor Area
+
+ZoneList,
+    189.1-2009 - Office - IT_Room - CZ1-3,    !- Name
+    Lab;                      !- Zone 1 Name
+
+ZoneList,
+    189.1-2009 - Office - Stair - CZ1-3,    !- Name
+    Stairs,                   !- Zone 1 Name
+    TopStairs;                !- Zone 2 Name
+
+ZoneList,
+    189.1-2009 - SecSchl - Auditorium - CZ1-3,    !- Name
+    Auditorium,               !- Zone 1 Name
+    BigAuditorium;            !- Zone 2 Name
+
+ZoneList,
+    189.1-2009 - SecSchl - Office - CZ1-3,    !- Name
+    Offices;                  !- Zone 1 Name
+
+BuildingSurface:Detailed,
+    Surface 1,                !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    Auditorium,               !- Zone Name
+    Ground,                   !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 2,                !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Auditorium,               !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 9,                !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 3,                !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Auditorium,               !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -13.8684,                 !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    -13.8684,                 !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 4,                !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Auditorium,               !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -13.8684,                 !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    -13.8684,                 !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 5,                !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Auditorium,               !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 6,                !- Name
+    Ceiling,                  !- Surface Type
+    CEILING_VAR_CONST,        !- Construction Name
+    Auditorium,               !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 19,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    4.4196,                   !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    4.4196,                   !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 13,               !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Ground,                   !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 14,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 11,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 15,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 16,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    20.574,                   !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    20.574,                   !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 17,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    20.574,                   !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    20.574,                   !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 18,               !- Name
+    Ceiling,                  !- Surface Type
+    CEILING_VAR_CONST,        !- Construction Name
+    BigAuditorium,            !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 31,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    4.4196,                   !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    4.4196,                   !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 19,               !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    Lab,                      !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 6,                !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 20,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Lab,                      !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 27,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 21,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Lab,                      !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -13.8684,                 !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    -13.8684,                 !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 22,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Lab,                      !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -13.8684,                 !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    -13.8684,                 !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 23,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Lab,                      !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 24,               !- Name
+    Roof,                     !- Surface Type
+    ROOF_VAR_CONST,           !- Construction Name
+    Lab,                      !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    5.4864,                   !- Vertex 2 Zcoordinate
+    -13.8684,                 !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    5.4864,                   !- Vertex 3 Zcoordinate
+    -13.8684,                 !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 31,               !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    Offices,                  !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 18,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 32,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Offices,                  !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 29,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 33,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Offices,                  !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 34,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Offices,                  !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    20.574,                   !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    20.574,                   !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 35,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Offices,                  !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    20.574,                   !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    20.574,                   !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 36,               !- Name
+    Roof,                     !- Surface Type
+    ROOF_VAR_CONST,           !- Construction Name
+    Offices,                  !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    20.574,                   !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    20.574,                   !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    5.4864,                   !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    5.4864,                   !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 10,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Stairs,                   !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 11,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Stairs,                   !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 14,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 12,               !- Name
+    Ceiling,                  !- Surface Type
+    CEILING_VAR_CONST,        !- Construction Name
+    Stairs,                   !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 25,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    4.4196,                   !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    4.4196,                   !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 7,                !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    Stairs,                   !- Zone Name
+    Ground,                   !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 8,                !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Stairs,                   !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -6.3246,                  !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    -6.3246,                  !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 9,                !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    Stairs,                   !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 2,                !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -6.3246,                  !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.4196,                   !- Vertex 1 Zcoordinate
+    -6.3246,                  !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.4196;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 25,               !- Name
+    Floor,                    !- Surface Type
+    FLOOR_VAR_CONST,          !- Construction Name
+    TopStairs,                !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 12,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    0,                        !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    0;                        !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 26,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    TopStairs,                !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -6.3246,                  !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    -6.3246,                  !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 27,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    TopStairs,                !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 20,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    -6.3246,                  !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    -6.3246,                  !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 28,               !- Name
+    Wall,                     !- Surface Type
+    EXTERIOR_WALL_VAR_CONST,    !- Construction Name
+    TopStairs,                !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 29,               !- Name
+    Wall,                     !- Surface Type
+    INTERIOR_WALL_VAR_CONST,    !- Construction Name
+    TopStairs,                !- Zone Name
+    Surface,                  !- Outside Boundary Condition
+    Surface 32,               !- Outside Boundary Condition Object
+    NoSun,                    !- Sun Exposure
+    NoWind,                   !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0,                        !- Vertex 2 Zcoordinate
+    0,                        !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0,                        !- Vertex 3 Zcoordinate
+    0,                        !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+BuildingSurface:Detailed,
+    Surface 30,               !- Name
+    Roof,                     !- Surface Type
+    ROOF_VAR_CONST,           !- Construction Name
+    TopStairs,                !- Zone Name
+    Outdoors,                 !- Outside Boundary Condition
+    ,                         !- Outside Boundary Condition Object
+    SunExposed,               !- Sun Exposure
+    WindExposed,              !- Wind Exposure
+    ,                         !- View Factor to Ground
+    ,                         !- Number of Vertices
+    0,                        !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    5.4864,                   !- Vertex 1 Zcoordinate
+    0,                        !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    5.4864,                   !- Vertex 2 Zcoordinate
+    -6.3246,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    5.4864,                   !- Vertex 3 Zcoordinate
+    -6.3246,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    5.4864;                   !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 3,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 21,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -13.843,                  !- Vertex 1 Xcoordinate
+    -13.8684,                 !- Vertex 1 Ycoordinate
+    2.21585417647059,         !- Vertex 1 Zcoordinate
+    -13.843,                  !- Vertex 2 Xcoordinate
+    -13.8684,                 !- Vertex 2 Ycoordinate
+    1.5,                      !- Vertex 2 Zcoordinate
+    -0.0254,                  !- Vertex 3 Xcoordinate
+    -13.8684,                 !- Vertex 3 Ycoordinate
+    1.5,                      !- Vertex 3 Zcoordinate
+    -0.0254,                  !- Vertex 4 Xcoordinate
+    -13.8684,                 !- Vertex 4 Ycoordinate
+    2.21585417647059;         !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 2,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 23,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -0.0254,                  !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.9864,                   !- Vertex 1 Zcoordinate
+    -0.0254,                  !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    1.84765476470588,         !- Vertex 2 Zcoordinate
+    -13.843,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    1.84765476470588,         !- Vertex 3 Zcoordinate
+    -13.843,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.9864;                   !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 1,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 33,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    20.5486,                  !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.9864,                   !- Vertex 1 Zcoordinate
+    20.5486,                  !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    2.89640752475248,         !- Vertex 2 Zcoordinate
+    0.0253999999999971,       !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    2.89640752475248,         !- Vertex 3 Zcoordinate
+    0.0253999999999971,       !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.9864;                   !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 4,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 35,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    0.0254,                   !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    1.93999841584158,         !- Vertex 1 Zcoordinate
+    0.0254,                   !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    1.5,                      !- Vertex 2 Zcoordinate
+    20.5486,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    1.5,                      !- Vertex 3 Zcoordinate
+    20.5486,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    1.93999841584158;         !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 7,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 10,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -0.0254,                  !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    3.86430898785425,         !- Vertex 1 Zcoordinate
+    -0.0254,                  !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0.3,                      !- Vertex 2 Zcoordinate
+    -6.2992,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0.3,                      !- Vertex 3 Zcoordinate
+    -6.2992,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    3.86430898785425;         !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 8,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 8,                !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -6.2992,                  !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    3.86430898785425,         !- Vertex 1 Zcoordinate
+    -6.2992,                  !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0.3,                      !- Vertex 2 Zcoordinate
+    -0.0254,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0.3,                      !- Vertex 3 Zcoordinate
+    -0.0254,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    3.86430898785425;         !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 5,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 26,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -6.2992,                  !- Vertex 1 Xcoordinate
+    0,                        !- Vertex 1 Ycoordinate
+    4.72465943319838,         !- Vertex 1 Zcoordinate
+    -6.2992,                  !- Vertex 2 Xcoordinate
+    0,                        !- Vertex 2 Ycoordinate
+    0.3,                      !- Vertex 2 Zcoordinate
+    -0.0254,                  !- Vertex 3 Xcoordinate
+    0,                        !- Vertex 3 Ycoordinate
+    0.3,                      !- Vertex 3 Zcoordinate
+    -0.0254,                  !- Vertex 4 Xcoordinate
+    0,                        !- Vertex 4 Ycoordinate
+    4.72465943319838;         !- Vertex 4 Zcoordinate
+
+FenestrationSurface:Detailed,
+    Sub Surface 6,            !- Name
+    Window,                   !- Surface Type
+    VAR_GLAZE_CONST,          !- Construction Name
+    Surface 28,               !- Building Surface Name
+    ,                         !- Outside Boundary Condition Object
+    ,                         !- View Factor to Ground
+    ,                         !- Frame and Divider Name
+    ,                         !- Multiplier
+    ,                         !- Number of Vertices
+    -0.0254,                  !- Vertex 1 Xcoordinate
+    13.8684,                  !- Vertex 1 Ycoordinate
+    4.72465943319838,         !- Vertex 1 Zcoordinate
+    -0.0254,                  !- Vertex 2 Xcoordinate
+    13.8684,                  !- Vertex 2 Ycoordinate
+    0.3,                      !- Vertex 2 Zcoordinate
+    -6.2992,                  !- Vertex 3 Xcoordinate
+    13.8684,                  !- Vertex 3 Ycoordinate
+    0.3,                      !- Vertex 3 Zcoordinate
+    -6.2992,                  !- Vertex 4 Xcoordinate
+    13.8684,                  !- Vertex 4 Ycoordinate
+    4.72465943319838;         !- Vertex 4 Zcoordinate
+
+People,
+    189.1-2009 - Office - IT_Room - CZ1-3 People,    !- Name
+    189.1-2009 - Office - IT_Room - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Occ,                 !- Number of People Schedule Name
+    People/Area,              !- Number of People Calculation Method
+    ,                         !- Number of People
+    3.541379e-02,             !- People per Zone Floor Area
+    ,                         !- Zone Floor Area per Person
+    0.3,                      !- Fraction Radiant
+    ,                         !- Sensible Heat Fraction
+    Bldg Activity;            !- Activity Level Schedule Name
+
+People,
+    189.1-2009 - SecSchl - Auditorium - CZ1-3 People,    !- Name
+    189.1-2009 - SecSchl - Auditorium - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Occ,                 !- Number of People Schedule Name
+    People/Area,              !- Number of People Calculation Method
+    ,                         !- Number of People
+    1.000397834129,           !- People per Zone Floor Area
+    ,                         !- Zone Floor Area per Person
+    0.3,                      !- Fraction Radiant
+    ,                         !- Sensible Heat Fraction
+    Bldg Activity;            !- Activity Level Schedule Name
+
+People,
+    189.1-2009 - SecSchl - Office - CZ1-3 People,    !- Name
+    189.1-2009 - SecSchl - Office - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Occ,                 !- Number of People Schedule Name
+    People/Area,              !- Number of People Calculation Method
+    ,                         !- Number of People
+    0.0500521834377002,       !- People per Zone Floor Area
+    ,                         !- Zone Floor Area per Person
+    0.3,                      !- Fraction Radiant
+    ,                         !- Sensible Heat Fraction
+    Bldg Activity;            !- Activity Level Schedule Name
+
+Lights,
+    189.1-2009 - Office - IT_Room - CZ1-3 Lights,    !- Name
+    189.1-2009 - Office - IT_Room - CZ1-3,    !- Zone or ZoneList Name
+    Lab Light,                !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Lighting Level
+    3.545454545454545,        !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Return Air Fraction
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Visible
+    1,                        !- Fraction Replaceable
+    General;                  !- EndUse Subcategory
+
+Lights,
+    189.1-2009 - Office - Stair - CZ1-3 Lights,    !- Name
+    189.1-2009 - Office - Stair - CZ1-3,    !- Zone or ZoneList Name
+    Stairs Light,             !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Lighting Level
+    2.6470588235294112,       !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Return Air Fraction
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Visible
+    1,                        !- Fraction Replaceable
+    General;                  !- EndUse Subcategory
+
+Lights,
+    189.1-2009 - SecSchl - Auditorium - CZ1-3 Lights,    !- Name
+    189.1-2009 - SecSchl - Auditorium - CZ1-3,    !- Zone or ZoneList Name
+    Auditorium Light,         !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Lighting Level
+    5,                        !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Return Air Fraction
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Visible
+    1,                        !- Fraction Replaceable
+    General;                  !- EndUse Subcategory
+
+Lights,
+    189.1-2009 - SecSchl - Office - CZ1-3 Lights,    !- Name
+    189.1-2009 - SecSchl - Office - CZ1-3,    !- Zone or ZoneList Name
+    Office Light,             !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Lighting Level
+    3.1538461538461533,       !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Return Air Fraction
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Visible
+    1,                        !- Fraction Replaceable
+    General;                  !- EndUse Subcategory
+
+ElectricEquipment,
+    189.1-2009 - Office - IT_Room - CZ1-3 Electric Equipment,    !- Name
+    189.1-2009 - Office - IT_Room - CZ1-3,    !- Zone or ZoneList Name
+    Lab Equip,                !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Design Level
+    33.666666666666664,       !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Fraction Latent
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Lost
+    General;                  !- EndUse Subcategory
+
+ElectricEquipment,
+    189.1-2009 - SecSchl - Auditorium - CZ1-3 Electric Equipment,    !- Name
+    189.1-2009 - SecSchl - Auditorium - CZ1-3,    !- Zone or ZoneList Name
+    Auditorium Equip,         !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Design Level
+    13.25,                    !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Fraction Latent
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Lost
+    General;                  !- EndUse Subcategory
+
+ElectricEquipment,
+    189.1-2009 - SecSchl - Office - CZ1-3 Electric Equipment,    !- Name
+    189.1-2009 - SecSchl - Office - CZ1-3,    !- Zone or ZoneList Name
+    Office Equip,             !- Schedule Name
+    Watts/Area,               !- Design Level Calculation Method
+    ,                         !- Design Level
+    20.6,                     !- Watts per Zone Floor Area
+    ,                         !- Watts per Person
+    ,                         !- Fraction Latent
+    ,                         !- Fraction Radiant
+    ,                         !- Fraction Lost
+    General;                  !- EndUse Subcategory
+
+ZoneInfiltration:DesignFlowRate,
+    189.1-2009 - Office - IT_Room - CZ1-3 Infiltration,    !- Name
+    189.1-2009 - Office - IT_Room - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Infil,               !- Schedule Name
+    Flow/ExteriorArea,        !- Design Flow Rate Calculation Method
+    ,                         !- Design Flow Rate
+    ,                         !- Flow per Zone Floor Area
+    8.510526e-04,             !- Flow per Exterior Surface Area
+    ,                         !- Air Changes per Hour
+    ,                         !- Constant Term Coefficient
+    ,                         !- Temperature Term Coefficient
+    ,                         !- Velocity Term Coefficient
+    ;                         !- Velocity Squared Term Coefficient
+
+ZoneInfiltration:DesignFlowRate,
+    189.1-2009 - Office - Stair - CZ1-3 Infiltration,    !- Name
+    189.1-2009 - Office - Stair - CZ1-3,    !- Zone or ZoneList Name
+    Stairs Infil,             !- Schedule Name
+    Flow/ExteriorArea,        !- Design Flow Rate Calculation Method
+    ,                         !- Design Flow Rate
+    ,                         !- Flow per Zone Floor Area
+    7.047826e-04,             !- Flow per Exterior Surface Area
+    ,                         !- Air Changes per Hour
+    ,                         !- Constant Term Coefficient
+    ,                         !- Temperature Term Coefficient
+    ,                         !- Velocity Term Coefficient
+    ;                         !- Velocity Squared Term Coefficient
+
+ZoneInfiltration:DesignFlowRate,
+    189.1-2009 - SecSchl - Auditorium - CZ1-3 Infiltration,    !- Name
+    189.1-2009 - SecSchl - Auditorium - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Infil,               !- Schedule Name
+    Flow/ExteriorArea,        !- Design Flow Rate Calculation Method
+    ,                         !- Design Flow Rate
+    ,                         !- Flow per Zone Floor Area
+    0.00030226,               !- Flow per Exterior Surface Area
+    ,                         !- Air Changes per Hour
+    ,                         !- Constant Term Coefficient
+    ,                         !- Temperature Term Coefficient
+    ,                         !- Velocity Term Coefficient
+    ;                         !- Velocity Squared Term Coefficient
+
+ZoneInfiltration:DesignFlowRate,
+    189.1-2009 - SecSchl - Office - CZ1-3 Infiltration,    !- Name
+    189.1-2009 - SecSchl - Office - CZ1-3,    !- Zone or ZoneList Name
+    Bldg Infil,               !- Schedule Name
+    Flow/ExteriorArea,        !- Design Flow Rate Calculation Method
+    ,                         !- Design Flow Rate
+    ,                         !- Flow per Zone Floor Area
+    0.00030226,               !- Flow per Exterior Surface Area
+    ,                         !- Air Changes per Hour
+    ,                         !- Constant Term Coefficient
+    ,                         !- Temperature Term Coefficient
+    ,                         !- Velocity Term Coefficient
+    ;                         !- Velocity Squared Term Coefficient
+
+Sizing:Parameters,
+    1.25,                     !- Heating Sizing Factor
+    1.15;                     !- Cooling Sizing Factor
+
+OutdoorAir:Node,
+    Model Outdoor Air Node;    !- Name
+
+LifeCycleCost:Parameters,
+    Life Cycle Cost Parameters,    !- Name
+    EndOfYear,                !- Discounting Convention
+    ConstantDollar,           !- Inflation Approach
+    0.03,                     !- Real Discount Rate
+    ,                         !- Nominal Discount Rate
+    ,                         !- Inflation
+    ,                         !- Base Date Month
+    2011,                     !- Base Date Year
+    ,                         !- Service Date Month
+    2011,                     !- Service Date Year
+    25,                       !- Length of Study Period in Years
+    ,                         !- Tax rate
+    None;                     !- Depreciation Method
+
+LifeCycleCost:NonrecurringCost,
+    Default Cost,             !- Name
+    Construction,             !- Category
+    0,                        !- Cost
+    ServicePeriod;            !- Start of Costs
+
+LifeCycleCost:UsePriceEscalation,
+    U.S. Avg  Commercial-Electricity,    !- LCC Price Escalation Name
+    Electricity,              !- Resource
+    2011,                     !- Escalation Start Year
+    January,                  !- Escalation Start Month
+    0.9838,                   !- Year 1 Escalation
+    0.973,                    !- Year 2 Escalation
+    0.9632,                   !- Year 3 Escalation
+    0.9611,                   !- Year 4 Escalation
+    0.9571,                   !- Year 5 Escalation
+    0.9553,                   !- Year 6 Escalation
+    0.9539,                   !- Year 7 Escalation
+    0.9521,                   !- Year 8 Escalation
+    0.9546,                   !- Year 9 Escalation
+    0.955,                    !- Year 10 Escalation
+    0.9553,                   !- Year 11 Escalation
+    0.9564,                   !- Year 12 Escalation
+    0.9575,                   !- Year 13 Escalation
+    0.9596,                   !- Year 14 Escalation
+    0.9618,                   !- Year 15 Escalation
+    0.9614,                   !- Year 16 Escalation
+    0.9618,                   !- Year 17 Escalation
+    0.9618,                   !- Year 18 Escalation
+    0.9593,                   !- Year 19 Escalation
+    0.9589,                   !- Year 20 Escalation
+    0.9607,                   !- Year 21 Escalation
+    0.9625,                   !- Year 22 Escalation
+    0.965,                    !- Year 23 Escalation
+    0.9708,                   !- Year 24 Escalation
+    0.9751,                   !- Year 25 Escalation
+    0.9762,                   !- Year 26 Escalation
+    0.9766,                   !- Year 27 Escalation
+    0.9766,                   !- Year 28 Escalation
+    0.9769,                   !- Year 29 Escalation
+    0.9773;                   !- Year 30 Escalation
+
+LifeCycleCost:UsePriceEscalation,
+    U.S. Avg  Commercial-Distillate Oil,    !- LCC Price Escalation Name
+    FuelOilNo1,               !- Resource
+    2011,                     !- Escalation Start Year
+    January,                  !- Escalation Start Month
+    0.9714,                   !- Year 1 Escalation
+    0.973,                    !- Year 2 Escalation
+    0.9942,                   !- Year 3 Escalation
+    1.0164,                   !- Year 4 Escalation
+    1.0541,                   !- Year 5 Escalation
+    1.0928,                   !- Year 6 Escalation
+    1.1267,                   !- Year 7 Escalation
+    1.158,                    !- Year 8 Escalation
+    1.1792,                   !- Year 9 Escalation
+    1.1967,                   !- Year 10 Escalation
+    1.22,                     !- Year 11 Escalation
+    1.2333,                   !- Year 12 Escalation
+    1.2566,                   !- Year 13 Escalation
+    1.2709,                   !- Year 14 Escalation
+    1.2826,                   !- Year 15 Escalation
+    1.2985,                   !- Year 16 Escalation
+    1.3102,                   !- Year 17 Escalation
+    1.325,                    !- Year 18 Escalation
+    1.3261,                   !- Year 19 Escalation
+    1.3282,                   !- Year 20 Escalation
+    1.3324,                   !- Year 21 Escalation
+    1.3356,                   !- Year 22 Escalation
+    1.3431,                   !- Year 23 Escalation
+    1.351,                    !- Year 24 Escalation
+    1.3568,                   !- Year 25 Escalation
+    1.3606,                   !- Year 26 Escalation
+    1.3637,                   !- Year 27 Escalation
+    1.3674,                   !- Year 28 Escalation
+    1.3706,                   !- Year 29 Escalation
+    1.3743;                   !- Year 30 Escalation
+
+LifeCycleCost:UsePriceEscalation,
+    U.S. Avg  Commercial-Residual Oil,    !- LCC Price Escalation Name
+    FuelOilNo2,               !- Resource
+    2011,                     !- Escalation Start Year
+    January,                  !- Escalation Start Month
+    0.8469,                   !- Year 1 Escalation
+    0.8257,                   !- Year 2 Escalation
+    0.8681,                   !- Year 3 Escalation
+    0.8988,                   !- Year 4 Escalation
+    0.9289,                   !- Year 5 Escalation
+    0.9604,                   !- Year 6 Escalation
+    0.9897,                   !- Year 7 Escalation
+    1.0075,                   !- Year 8 Escalation
+    1.0314,                   !- Year 9 Escalation
+    1.0554,                   !- Year 10 Escalation
+    1.0861,                   !- Year 11 Escalation
+    1.1278,                   !- Year 12 Escalation
+    1.1497,                   !- Year 13 Escalation
+    1.162,                    !- Year 14 Escalation
+    1.1743,                   !- Year 15 Escalation
+    1.1852,                   !- Year 16 Escalation
+    1.1948,                   !- Year 17 Escalation
+    1.2037,                   !- Year 18 Escalation
+    1.2071,                   !- Year 19 Escalation
+    1.2119,                   !- Year 20 Escalation
+    1.2139,                   !- Year 21 Escalation
+    1.2194,                   !- Year 22 Escalation
+    1.2276,                   !- Year 23 Escalation
+    1.2365,                   !- Year 24 Escalation
+    1.242,                    !- Year 25 Escalation
+    1.2461,                   !- Year 26 Escalation
+    1.2509,                   !- Year 27 Escalation
+    1.255,                    !- Year 28 Escalation
+    1.2591,                   !- Year 29 Escalation
+    1.2638;                   !- Year 30 Escalation
+
+LifeCycleCost:UsePriceEscalation,
+    U.S. Avg  Commercial-Natural gas,    !- LCC Price Escalation Name
+    NaturalGas,               !- Resource
+    2011,                     !- Escalation Start Year
+    January,                  !- Escalation Start Month
+    0.9823,                   !- Year 1 Escalation
+    0.9557,                   !- Year 2 Escalation
+    0.9279,                   !- Year 3 Escalation
+    0.9257,                   !- Year 4 Escalation
+    0.9346,                   !- Year 5 Escalation
+    0.9412,                   !- Year 6 Escalation
+    0.9512,                   !- Year 7 Escalation
+    0.9645,                   !- Year 8 Escalation
+    0.9856,                   !- Year 9 Escalation
+    1.0067,                   !- Year 10 Escalation
+    1.0222,                   !- Year 11 Escalation
+    1.041,                    !- Year 12 Escalation
+    1.061,                    !- Year 13 Escalation
+    1.0787,                   !- Year 14 Escalation
+    1.0942,                   !- Year 15 Escalation
+    1.1098,                   !- Year 16 Escalation
+    1.122,                    !- Year 17 Escalation
+    1.1308,                   !- Year 18 Escalation
+    1.1386,                   !- Year 19 Escalation
+    1.1486,                   !- Year 20 Escalation
+    1.1619,                   !- Year 21 Escalation
+    1.1763,                   !- Year 22 Escalation
+    1.1918,                   !- Year 23 Escalation
+    1.2118,                   !- Year 24 Escalation
+    1.2284,                   !- Year 25 Escalation
+    1.2439,                   !- Year 26 Escalation
+    1.2605,                   !- Year 27 Escalation
+    1.2772,                   !- Year 28 Escalation
+    1.2938,                   !- Year 29 Escalation
+    1.3115;                   !- Year 30 Escalation
+
+LifeCycleCost:UsePriceEscalation,
+    U.S. Avg  Commercial-Coal,    !- LCC Price Escalation Name
+    Coal,                     !- Resource
+    2011,                     !- Escalation Start Year
+    January,                  !- Escalation Start Month
+    0.997,                    !- Year 1 Escalation
+    1.0089,                   !- Year 2 Escalation
+    1.0089,                   !- Year 3 Escalation
+    0.9941,                   !- Year 4 Escalation
+    0.9941,                   !- Year 5 Escalation
+    1,                        !- Year 6 Escalation
+    1.003,                    !- Year 7 Escalation
+    1.0059,                   !- Year 8 Escalation
+    1.0089,                   !- Year 9 Escalation
+    1.0119,                   !- Year 10 Escalation
+    1.0148,                   !- Year 11 Escalation
+    1.0178,                   !- Year 12 Escalation
+    1.0208,                   !- Year 13 Escalation
+    1.0267,                   !- Year 14 Escalation
+    1.0297,                   !- Year 15 Escalation
+    1.0356,                   !- Year 16 Escalation
+    1.0415,                   !- Year 17 Escalation
+    1.0534,                   !- Year 18 Escalation
+    1.0564,                   !- Year 19 Escalation
+    1.0593,                   !- Year 20 Escalation
+    1.0653,                   !- Year 21 Escalation
+    1.0712,                   !- Year 22 Escalation
+    1.0742,                   !- Year 23 Escalation
+    1.0801,                   !- Year 24 Escalation
+    1.0831,                   !- Year 25 Escalation
+    1.0831,                   !- Year 26 Escalation
+    1.0861,                   !- Year 27 Escalation
+    1.089,                    !- Year 28 Escalation
+    1.092,                    !- Year 29 Escalation
+    1.095;                    !- Year 30 Escalation
+
+Output:VariableDictionary,
+    IDF,                      !- Key Field
+    Unsorted;                 !- Sort Option
+
+Output:Table:SummaryReports,
+    AllSummary;               !- Report 1 Name
+
+Output:Table:Monthly,
+    Building Energy Performance - Electricity,    !- Name
+    2,                        !- Digits After Decimal
+    InteriorLights:Electricity,    !- Variable or Meter 1 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 1
+    ExteriorLights:Electricity,    !- Variable or Meter 2 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 2
+    InteriorEquipment:Electricity,    !- Variable or Meter 3 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 3
+    ExteriorEquipment:Electricity,    !- Variable or Meter 4 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 4
+    Fans:Electricity,         !- Variable or Meter 5 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 5
+    Pumps:Electricity,        !- Variable or Meter 6 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 6
+    Heating:Electricity,      !- Variable or Meter 7 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 7
+    Cooling:Electricity,      !- Variable or Meter 8 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 8
+    HeatRejection:Electricity,    !- Variable or Meter 9 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 9
+    Humidifier:Electricity,    !- Variable or Meter 10 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 10
+    HeatRecovery:Electricity,    !- Variable or Meter 11 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 11
+    WaterSystems:Electricity,    !- Variable or Meter 12 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 12
+    Cogeneration:Electricity,    !- Variable or Meter 13 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 13
+    Refrigeration:Electricity,    !- Variable or Meter 14 Name
+    SumOrAverage;             !- Aggregation Type for Variable or Meter 14
+
+Output:Table:Monthly,
+    Building Energy Performance - Natural Gas,    !- Name
+    2,                        !- Digits After Decimal
+    InteriorEquipment:NaturalGas,    !- Variable or Meter 1 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 1
+    ExteriorEquipment:NaturalGas,    !- Variable or Meter 2 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 2
+    Heating:NaturalGas,       !- Variable or Meter 3 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 3
+    Cooling:NaturalGas,       !- Variable or Meter 4 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 4
+    WaterSystems:NaturalGas,    !- Variable or Meter 5 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 5
+    Cogeneration:NaturalGas,    !- Variable or Meter 6 Name
+    SumOrAverage;             !- Aggregation Type for Variable or Meter 6
+
+Output:Table:Monthly,
+    Building Energy Performance - District Heating,    !- Name
+    2,                        !- Digits After Decimal
+    InteriorLights:DistrictHeating,    !- Variable or Meter 1 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 1
+    ExteriorLights:DistrictHeating,    !- Variable or Meter 2 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 2
+    InteriorEquipment:DistrictHeating,    !- Variable or Meter 3 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 3
+    ExteriorEquipment:DistrictHeating,    !- Variable or Meter 4 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 4
+    Fans:DistrictHeating,     !- Variable or Meter 5 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 5
+    Pumps:DistrictHeating,    !- Variable or Meter 6 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 6
+    Heating:DistrictHeating,    !- Variable or Meter 7 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 7
+    Cooling:DistrictHeating,    !- Variable or Meter 8 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 8
+    HeatRejection:DistrictHeating,    !- Variable or Meter 9 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 9
+    Humidifier:DistrictHeating,    !- Variable or Meter 10 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 10
+    HeatRecovery:DistrictHeating,    !- Variable or Meter 11 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 11
+    WaterSystems:DistrictHeating,    !- Variable or Meter 12 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 12
+    Cogeneration:DistrictHeating,    !- Variable or Meter 13 Name
+    SumOrAverage;             !- Aggregation Type for Variable or Meter 13
+
+Output:Table:Monthly,
+    Building Energy Performance - District Cooling,    !- Name
+    2,                        !- Digits After Decimal
+    InteriorLights:DistrictCooling,    !- Variable or Meter 1 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 1
+    ExteriorLights:DistrictCooling,    !- Variable or Meter 2 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 2
+    InteriorEquipment:DistrictCooling,    !- Variable or Meter 3 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 3
+    ExteriorEquipment:DistrictCooling,    !- Variable or Meter 4 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 4
+    Fans:DistrictCooling,     !- Variable or Meter 5 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 5
+    Pumps:DistrictCooling,    !- Variable or Meter 6 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 6
+    Heating:DistrictCooling,    !- Variable or Meter 7 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 7
+    Cooling:DistrictCooling,    !- Variable or Meter 8 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 8
+    HeatRejection:DistrictCooling,    !- Variable or Meter 9 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 9
+    Humidifier:DistrictCooling,    !- Variable or Meter 10 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 10
+    HeatRecovery:DistrictCooling,    !- Variable or Meter 11 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 11
+    WaterSystems:DistrictCooling,    !- Variable or Meter 12 Name
+    SumOrAverage,             !- Aggregation Type for Variable or Meter 12
+    Cogeneration:DistrictCooling,    !- Variable or Meter 13 Name
+    SumOrAverage;             !- Aggregation Type for Variable or Meter 13
+
+Output:Table:Monthly,
+    Building Energy Performance - Electricity Peak Demand,    !- Name
+    2,                        !- Digits After Decimal
+    Electricity:Facility,     !- Variable or Meter 1 Name
+    Maximum,                  !- Aggregation Type for Variable or Meter 1
+    InteriorLights:Electricity,    !- Variable or Meter 2 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 2
+    ExteriorLights:Electricity,    !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 3
+    InteriorEquipment:Electricity,    !- Variable or Meter 4 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 4
+    ExteriorEquipment:Electricity,    !- Variable or Meter 5 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 5
+    Fans:Electricity,         !- Variable or Meter 6 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 6
+    Pumps:Electricity,        !- Variable or Meter 7 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 7
+    Heating:Electricity,      !- Variable or Meter 8 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 8
+    Cooling:Electricity,      !- Variable or Meter 9 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 9
+    HeatRejection:Electricity,    !- Variable or Meter 10 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 10
+    Humidifier:Electricity,    !- Variable or Meter 11 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 11
+    HeatRecovery:Electricity,    !- Variable or Meter 12 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 12
+    WaterSystems:Electricity,    !- Variable or Meter 13 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 13
+    Cogeneration:Electricity,    !- Variable or Meter 14 Name
+    ValueWhenMaximumOrMinimum;    !- Aggregation Type for Variable or Meter 14
+
+Output:Table:Monthly,
+    Building Energy Performance - Natural Gas Peak Demand,    !- Name
+    2,                        !- Digits After Decimal
+    NaturalGas:Facility,      !- Variable or Meter 1 Name
+    Maximum,                  !- Aggregation Type for Variable or Meter 1
+    InteriorEquipment:NaturalGas,    !- Variable or Meter 2 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 2
+    ExteriorEquipment:NaturalGas,    !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 3
+    Heating:NaturalGas,       !- Variable or Meter 4 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 4
+    Cooling:NaturalGas,       !- Variable or Meter 5 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 5
+    WaterSystems:NaturalGas,    !- Variable or Meter 6 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 6
+    Cogeneration:NaturalGas,    !- Variable or Meter 7 Name
+    ValueWhenMaximumOrMinimum;    !- Aggregation Type for Variable or Meter 7
+
+Output:Table:Monthly,
+    Building Energy Performance - District Heating Peak Demand,    !- Name
+    2,                        !- Digits After Decimal
+    DistrictHeating:Facility,    !- Variable or Meter 1 Name
+    Maximum,                  !- Aggregation Type for Variable or Meter 1
+    InteriorLights:DistrictHeating,    !- Variable or Meter 2 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 2
+    ExteriorLights:DistrictHeating,    !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 3
+    InteriorEquipment:DistrictHeating,    !- Variable or Meter 4 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 4
+    ExteriorEquipment:DistrictHeating,    !- Variable or Meter 5 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 5
+    Fans:DistrictHeating,     !- Variable or Meter 6 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 6
+    Pumps:DistrictHeating,    !- Variable or Meter 7 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 7
+    Heating:DistrictHeating,    !- Variable or Meter 8 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 8
+    Cooling:DistrictHeating,    !- Variable or Meter 9 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 9
+    HeatRejection:DistrictHeating,    !- Variable or Meter 10 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 10
+    Humidifier:DistrictHeating,    !- Variable or Meter 11 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 11
+    HeatRecovery:DistrictHeating,    !- Variable or Meter 12 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 12
+    WaterSystems:DistrictHeating,    !- Variable or Meter 13 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 13
+    Cogeneration:DistrictHeating,    !- Variable or Meter 14 Name
+    ValueWhenMaximumOrMinimum;    !- Aggregation Type for Variable or Meter 14
+
+Output:Table:Monthly,
+    Building Energy Performance - District Cooling Peak Demand,    !- Name
+    2,                        !- Digits After Decimal
+    DistrictCooling:Facility,    !- Variable or Meter 1 Name
+    Maximum,                  !- Aggregation Type for Variable or Meter 1
+    InteriorLights:DistrictCooling,    !- Variable or Meter 2 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 2
+    ExteriorLights:DistrictCooling,    !- Variable or Meter 3 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 3
+    InteriorEquipment:DistrictCooling,    !- Variable or Meter 4 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 4
+    ExteriorEquipment:DistrictCooling,    !- Variable or Meter 5 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 5
+    Fans:DistrictCooling,     !- Variable or Meter 6 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 6
+    Pumps:DistrictCooling,    !- Variable or Meter 7 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 7
+    Heating:DistrictCooling,    !- Variable or Meter 8 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 8
+    Cooling:DistrictCooling,    !- Variable or Meter 9 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 9
+    HeatRejection:DistrictCooling,    !- Variable or Meter 10 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 10
+    Humidifier:DistrictCooling,    !- Variable or Meter 11 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 11
+    HeatRecovery:DistrictCooling,    !- Variable or Meter 12 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 12
+    WaterSystems:DistrictCooling,    !- Variable or Meter 13 Name
+    ValueWhenMaximumOrMinimum,    !- Aggregation Type for Variable or Meter 13
+    Cogeneration:DistrictCooling,    !- Variable or Meter 14 Name
+    ValueWhenMaximumOrMinimum;    !- Aggregation Type for Variable or Meter 14
+
+OutputControl:Table:Style,
+    HTML;                     !- Column Separator
+
+OutputControl:ReportingTolerances,
+    0.2,                      !- Tolerance for Time Heating Setpoint Not Met
+    0.2;                      !- Tolerance for Time Cooling Setpoint Not Met
+
+Output:Meter,
+    Electricity:Facility,     !- Key Name
+    Timestep;                 !- Reporting Frequency
+
+Output:Meter,
+    NaturalGas:Facility,      !- Key Name
+    Timestep;                 !- Reporting Frequency
+
+Output:Meter,
+    DistrictCooling:Facility,    !- Key Name
+    Timestep;                 !- Reporting Frequency
+
+Output:Meter,
+    DistrictHeating:Facility,    !- Key Name
+    Timestep;                 !- Reporting Frequency
+
+Output:Meter:MeterFileOnly,
+    NaturalGas:Facility,      !- Key Name
+    Daily;                    !- Reporting Frequency
+
+Output:Meter:MeterFileOnly,
+    Electricity:Facility,     !- Key Name
+    Timestep;                 !- Reporting Frequency
+
+Output:Meter:MeterFileOnly,
+    Electricity:Facility,     !- Key Name
+    Daily;                    !- Reporting Frequency
+
+Output:JSON,
+    TimeSeriesAndTabular,     !- Option Type
+    No,                       !- Output JSON
+    No,                       !- Output CBOR
+    No;                       !- Output MessagePack
+
+Output:SQLite,
+    SimpleAndTabular;         !- Option Type

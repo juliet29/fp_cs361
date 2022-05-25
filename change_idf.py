@@ -1,5 +1,5 @@
 """
-# TODO insert some notes about what this does 
+Takes a final_dp_dict from "assign_params.py" that reflects a single design point and assign values to an idf
 """
 
 from eppy import *
@@ -53,49 +53,10 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
 
 
 def change_idf(idf0, design_pt=None):
-    # # --------- Initialization --------
-    # # -- IDF initialization
-    # # set the idd
-    # iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
-    # IDF.setiddname(iddfile)
-
-    # # get the idf
-    # idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_18/th_0518_01b/in3.idf"
-
-    # # get the weather file
-    # epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
-
-    # # create idf for changing
-    # idf0 = IDF(idf_path, epw)
 
     # -- Design Point Dict initialization
     a = AssignParams()
     dp_dict = a.make_a_dict(design_pt)
-
-
-    # --------- Materials --------
-
-    # -- Glazing
-    dp_glazing = dp_dict["materials"]["glazing"]
-
-    glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"]
-    glaze_obj.UFactor = map_samples(dp_glazing["u_val"], 0.01, 5)
-    glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
-
-
-    # -- Constructions
-    dp_constructions = dp_dict["materials"]["construction_r_vals"]
-
-    # set floor and ceiling equal 
-    dp_constructions["ceiling"] = dp_constructions["floor"]
-
-    material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
-    # materials = idf0.idfobjects["Material:NoMass"]
-    # print(materials)
-    for type in material_types:
-        mat_obj = [m for m in idf0.idfobjects["Material:NoMass"] if m.Name == f"{type}_VAR_MAT"][0]
-        mat_obj.Thermal_Resistance = map_samples(
-            dp_constructions[type.lower()], 0.01, 5)
 
 
     # --------- Default Values  --------------------------
@@ -120,14 +81,11 @@ def change_idf(idf0, design_pt=None):
 
 
     # --------- Schedules --------------------------
-    # TODO inner fx to assign times to fields for a given zone and energy use type. outer function for zones 
     dp_sched = dp_dict["schedules"]
 
     use_types = {
         "Equip": equip_zone_names,
         "Light": light_zone_names,
-        "Infil": ["bldg"],
-        "Occ": occ_zone_names
     }
 
     # use_types = ["equipment", "light", "infiltration", "occupancy"]
@@ -149,5 +107,30 @@ def change_idf(idf0, design_pt=None):
 
     # # run the idf 
     # idf0.run(output_directory=new_dir_name)
+
+
+    # # --------- Materials --------
+
+    # # -- Glazing
+    # dp_glazing = dp_dict["materials"]["glazing"]
+
+    # glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"]
+    # glaze_obj.UFactor = map_samples(dp_glazing["u_val"], 0.01, 5)
+    # glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
+
+
+    # # -- Constructions
+    # dp_constructions = dp_dict["materials"]["construction_r_vals"]
+
+    # # set floor and ceiling equal 
+    # dp_constructions["ceiling"] = dp_constructions["floor"]
+
+    # material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
+    # # materials = idf0.idfobjects["Material:NoMass"]
+    # # print(materials)
+    # for type in material_types:
+    #     mat_obj = [m for m in idf0.idfobjects["Material:NoMass"] if m.Name == f"{type}_VAR_MAT"][0]
+    #     mat_obj.Thermal_Resistance = map_samples(
+    #         dp_constructions[type.lower()], 0.01, 5)
 
 

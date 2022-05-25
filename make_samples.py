@@ -1,7 +1,6 @@
 """
-Take in a sample of list of samples, create change idfs in their own folders based on a soure idf, 
+Take in a csv holding a list of design points, create change idfs by calling "change_idf.py" in their own folders based on a soure idf, 
 then maybe go through ans run the idfs.
-then maybe extract the desired data from the sql files and save in a csv
 """
 
 from eppy import *
@@ -18,7 +17,7 @@ iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
 IDF.setiddname(iddfile)
 
 # get the idf 
-idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_18/th_0518_01b/in3.idf"
+idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_24/th_0524_00/in.idf"
 
 # get the weather file 
 epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
@@ -27,11 +26,11 @@ epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PAL
 idf0 = IDF(idf_path, epw)
 
 # create folder to hold the batch 
-root = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19"
+root = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_24"
 
 
 # batch_dir = os.path.join(root, "05_20_batch_00")
-batch_name = "05_20_batch_00"
+batch_name = "0524_batch_00"
 i = 0
 while True:
     batch_dir = os.path.join(root, f"{batch_name}_0{i}")
@@ -41,11 +40,11 @@ while True:
         break
 
 # Take in Samples and Make Changes, Save IDF in Folder
-random.seed(2)
-design_pt =  [random.random() for i in range(0,61)]
+# random.seed(2)
+# design_pt =  [random.random() for i in range(0,61)]
 
 # ------ Process the Design Points -------------
-df = pd.read_csv ('/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/0520_samples.csv')
+df = pd.read_csv ('/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/samples_0524_10.csv')
 design_pts = df.T.values.tolist()
 
 # ------ Make the Simulations! --------

@@ -22,6 +22,8 @@ function get_filling_set_halton(m, n)
     
 end
 
+# m = number of samples
+# n = number of dimensions
 function save_samples(m, n, name="samples")
     samples = get_filling_set_halton(m, n)
     df = DataFrame(samples, :auto)
@@ -29,3 +31,5 @@ function save_samples(m, n, name="samples")
     return df
     
 end
+
+# save_samples(10, 38, "samples_0524_10")

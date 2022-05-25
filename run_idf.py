@@ -11,10 +11,10 @@ import os
 print("imports!")
 
 # folder where the model will be saved 
-adjust_string_name = "th_0518_01b"
+adjust_string_name = "th_0524_01b"
 
 # identify the model 
-model_name = "05_18/th_0518_01_materials" 
+model_name = "05_24/th_0524_00" 
 model_dir = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{model_name}" # /run
 
 

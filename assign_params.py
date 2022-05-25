@@ -1,5 +1,5 @@
 """
-# TODO insert some notes about what this does 
+Takes in a design point with number of vars = length of dp_dict, and assigns the values to the dict, final_dp_dict. This dict is used by "change_idf.py" to translate values from the design point array to an idf.
 """
 
 import random
@@ -8,20 +8,6 @@ import flatdict
 class AssignParams:
     def create_param_dict(self):
         dp_dict = {
-            "materials": {
-                "glazing": {
-                    "u_val": 0,
-                    "shgc": 0
-                },
-                "construction_r_vals": {
-                    "ceiling": 0,
-                    "roof": 0,
-                    "floor": 0,
-                    "interior_wall": 0,
-                    "exterior_wall": 0,
-                }
-
-            },
             "default_vals": {
                 "equipment": {
                     "auditorium": 0,
@@ -88,21 +74,7 @@ class AssignParams:
                         "break_hours": 0,
                         "offseason_fraction": 0, },
                 },
-                "infil": {
-                    "bldg": {
-                        "night": 0,
-                        "working_hours": 0,
-                        "break_hours": 0,
-                        "offseason_fraction": 0, },
-
-                },
-                "occ": {
-                    "bldg": {
-                        "night": 0,
-                        "working_hours": 0,
-                        "break_hours": 0,
-                        "offseason_fraction": 0, },
-                }
+    
 
             }
         }

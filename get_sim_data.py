@@ -44,9 +44,9 @@ def get_sim_data(batch_path, num_sims, batch_name):
 
 
 def main():
-    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19/05_20_batch_00_06"
-    num_sims = 100
-    batch_name = "0520_batch_00_06"
+    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_24/0524_batch_00_00"
+    num_sims = 10
+    batch_name = "0524_batch_00_00"
     get_sim_data(batch_path, num_sims, batch_name)
 
 
