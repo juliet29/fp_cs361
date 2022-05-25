@@ -31,6 +31,7 @@ function particle_swarm_optimization(f, population, k_max, w=1, c1=1, c2=1)
             r1, r2 = rand(n), rand(n)
             # update x -> take a step in the v direction 
             P.x += P.v 
+            P.x = max.(P.x, 0)
             # update v -> accelerate randomly towards the goal 
             P.v = w*P.v + c1*r1.*(P.x_best - P.x) + c2*r2.*(x_best - P.x)
             y = f(P.x)

@@ -39,7 +39,7 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
     # break hours -> lunch time (12 - 13)  & evening (17 - midnight)
     idf_sched_object.Field_8 = idf_sched_object.Field_12 = idf_sched_object[f"Field_{8 + fw}"] = idf_sched_object[f"Field_{12 + fw}"] = dp_sched_object["break_hours"] 
 
-    ## offseason -> summer (through 09/01)
+    ## TODO offseason -> summer (through 10/01)
     summ  = 27 - 4 # summer_field_offset
 
     # night (midnight - 8am)
@@ -53,10 +53,34 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
 
 
 def change_idf(idf0, design_pt=None):
-
     # -- Design Point Dict initialization
     a = AssignParams()
     dp_dict = a.make_a_dict(design_pt)
+
+
+    # --------- Materials --------
+
+    # -- Glazing
+    dp_glazing = dp_dict["materials"]["glazing"]
+
+    glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"]
+    glaze_obj.UFactor = map_samples(dp_glazing["u_val"], 0.01, 5)
+    glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
+
+
+    # -- Constructions
+    dp_constructions = dp_dict["materials"]["construction_r_vals"]
+
+    # set floor and ceiling equal 
+    dp_constructions["ceiling"] = dp_constructions["floor"]
+
+    material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
+    # materials = idf0.idfobjects["Material:NoMass"]
+    # print(materials)
+    for type in material_types:
+        mat_obj = [m for m in idf0.idfobjects["Material:NoMass"] if m.Name == f"{type}_VAR_MAT"][0]
+        mat_obj.Thermal_Resistance = map_samples(
+            dp_constructions[type.lower()], 0.01, 5)
 
 
     # --------- Default Values  --------------------------
@@ -86,6 +110,8 @@ def change_idf(idf0, design_pt=None):
     use_types = {
         "Equip": equip_zone_names,
         "Light": light_zone_names,
+        "Infil": ["bldg"],
+        "Occ": occ_zone_names
     }
 
     # use_types = ["equipment", "light", "infiltration", "occupancy"]
@@ -97,40 +123,5 @@ def change_idf(idf0, design_pt=None):
 
 
 
-    # --------- Run It   --------------------------
+    # --------- Return the Changed IDF   --------------------------
     return idf0
-
-    # new_dir_name = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_19/th_05019_00"
-
-    # # save the updated idf 
-    # idf0.save(os.path.join(new_dir_name, "in3.idf"))
-
-    # # run the idf 
-    # idf0.run(output_directory=new_dir_name)
-
-
-    # # --------- Materials --------
-
-    # # -- Glazing
-    # dp_glazing = dp_dict["materials"]["glazing"]
-
-    # glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"]
-    # glaze_obj.UFactor = map_samples(dp_glazing["u_val"], 0.01, 5)
-    # glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
-
-
-    # # -- Constructions
-    # dp_constructions = dp_dict["materials"]["construction_r_vals"]
-
-    # # set floor and ceiling equal 
-    # dp_constructions["ceiling"] = dp_constructions["floor"]
-
-    # material_types = ["CEILING", "ROOF", "FLOOR", "INTERIOR_WALL", "EXTERIOR_WALL"]
-    # # materials = idf0.idfobjects["Material:NoMass"]
-    # # print(materials)
-    # for type in material_types:
-    #     mat_obj = [m for m in idf0.idfobjects["Material:NoMass"] if m.Name == f"{type}_VAR_MAT"][0]
-    #     mat_obj.Thermal_Resistance = map_samples(
-    #         dp_constructions[type.lower()], 0.01, 5)
-
-

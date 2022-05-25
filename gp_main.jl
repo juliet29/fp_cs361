@@ -60,6 +60,7 @@ self_tuning_gpmodel = TunedModel(model=gpmodel,
 mach = machine(self_tuning_gpmodel, Xtable, y);
 MLJ.fit!(mach, verbosity=0)
 
+# TODO move to pso.jl 
 # function that predicts y given our GP
 function fpred(X)
     Xo = reshape(X, length(X), 1)'

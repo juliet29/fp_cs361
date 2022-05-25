@@ -11,10 +11,10 @@ import os
 print("imports!")
 
 # folder where the model will be saved 
-adjust_string_name = "th_0524_01b"
+adjust_string_name = "base_check"
 
 # identify the model 
-model_name = "05_24/th_0524_00" 
+model_name = "05_25/base" 
 model_dir = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{model_name}" # /run
 
 
@@ -29,7 +29,7 @@ idf0 = IDF(idfPath, epw)
 
 # # make a new dir for the output
 root = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models"
-adjusted_model_dir = os.path.join(root, "05_18")
+adjusted_model_dir = os.path.join(root, "05_25")
 
 # create new directory to save the file 
 new_dir_name = os.path.join(adjusted_model_dir, adjust_string_name)
