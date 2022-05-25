@@ -66,9 +66,9 @@ end
 
 
 # ----- Try It on Different Functions!  --------
-function ep_opt()
-    pop = create_population(10, 61)
-    population, x_best, y_best = particle_swarm_optimization(fpred, pop, 10)
+function ep_opt(num_samples=10, iterations=10)
+    pop = create_population(num_samples, 61)
+    population, x_best, y_best = particle_swarm_optimization(fpred, pop, iterations)
     println("y_best is $y_best")
 end
 

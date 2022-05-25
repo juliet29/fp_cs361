@@ -64,10 +64,13 @@ MLJ.fit!(mach, verbosity=0)
 function fpred(X)
     Xo = reshape(X, length(X), 1)'
     # println("x shape $(size(Xo))")
-    y = MLJ.predict(mach, Xo)
+    y = MLJ.predict(mach, Xo)[1]
+    if y <= 0 
+        y = y + 10e6
+    end 
     # println("y shape $(size(y))")
     # println("y $(y)")
-    return y[1]
+    return y
 end
 
 
