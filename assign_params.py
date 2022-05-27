@@ -114,9 +114,9 @@ class AssignParams:
 
     def make_a_dict(self, design_pt=[]):
 
-        print(f"dpt in assign_params {design_pt} ")
+        # print(f"dpt in assign_params {design_pt} ")
         if len(design_pt) < 1:
-            print("heey making my own dpt ")
+            # print("heey making my own random dpt ")
             random.seed(2)
             design_pt =  [random.random() for i in range(0,61)]
         
@@ -125,7 +125,8 @@ class AssignParams:
 
         # actually assign variables 
         d =  flatdict.FlatDict(dp_dict, delimiter='.')
-        print(len(d))
+        # print(len(d))
+        # print(f"In Assign Params, DP[0] = {design_pt[0][0]} \n")
         for key, v in zip(d,design_pt):
             d[key] = v
         final_dp_dict = d.as_dict()

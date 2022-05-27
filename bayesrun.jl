@@ -5,29 +5,27 @@ include("/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/bayesfx.jl
 function bayes_opt(samples_name, sim_data_name, new_sim_data_name, kmax)
     # initialize
     X, y, h = prepare_priors(samples_name, sim_data_name)
+    names = ["a", "b", "c", "d"]
 
     # run it 
     for k=1:kmax
         gp, r0 = create_gp(X, y)
         
         dp, Xa = expected_improvement_pt(gp, y, X, false)
-
-
-
-            # dp, Xa = expected_improvement_pt(gp, y, X, Xa)
+        # dp, Xa = expected_improvement_pt(gp, y, X, Xa)
         
-        println("dp $dp check: $(dp ⊆  X) \n")
+        println("Design_Point[1]:\n $(dp[1][1]) check: $(dp ⊆  X) \n")
 
-        create_and_run_idf(dp, "$new_sim_data_name-$k")
-        X, y = update_priors("$new_sim_data_name-$k", X, y, dp, h)
-        println("done w run $k, y is $y")
+        create_and_run_idf(dp, "$new_sim_data_name-$(names[k])")
+        X, y = update_priors("$new_sim_data_name-$(names[k])", X, y, dp, h)
+        println("\n done w run $k, last y is $(y[end]) \n ")
     end
 
 end
 
 
 
-bayes_opt("samples_0524_10", "0524_batch_00_00", "0526_bopt0", 3)
+bayes_opt("0520_samples", "0520_batch_00_06", "0527_bopt0", 1)
 # update_priors("0526_bopt0" X, y, dp, h)
 
 

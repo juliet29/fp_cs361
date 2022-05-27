@@ -9,7 +9,7 @@ class GetSimData():
     def get_sim_data(self, batch_path, num_sims, batch_name):
         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-        print(f"batch path in sim data {batch_path}")
+        # print(f"batch path in sim data {batch_path}")
 
         # create list of lists with data from all samples 
         all_samples = []

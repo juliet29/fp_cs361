@@ -74,7 +74,7 @@ function prepare_priors(samples_name, sim_data_name)
 
     y = convert(Array{Float64,1}, y); # GJ
 
-    println("x $(size(X)), y $(size(y))")
+    # println("x $(size(X)), y $(size(y))")
     # data should be like this: x (2, 50), y (50,) 
     # -> (dims, numpts)
 
@@ -86,11 +86,12 @@ function create_gp(X, y)
     m = MeanZero()
     kern = SE(0.09, 0.7)
     gp = GP(X,y,m,kern)
-    println("gp done")
+    # println("gp done")
     y_hat = predict_f(gp, X)[1]
     # TODO should be doing the maximum log likelihood here?
     r0 = rmsd(y_hat, y) 
-    println("rmse of gp to data (needs to be log likelihood) ", r0, "\n")
+    # (needs to be log likelihood)
+    println("rmse of gp to data ", r0, "\n")
     return gp, r0
     
 end
@@ -133,7 +134,7 @@ function expected_improvement_pt(gp, observed_y, X, Xa=false)
         push!(e,  expected_improvement(y_min, m, s))
     end
     e_sort = sortperm(e, rev=true)
-    println("sorted expectations ix", e_sort)
+    # println("sorted expectations ix", e_sort)
 
     best_x = Xa[:,e_sort[1]]
 
@@ -141,7 +142,7 @@ function expected_improvement_pt(gp, observed_y, X, Xa=false)
     while true
         best_x = Xa[:,e_sort[i]]
         # println(best_x )
-        println(e_sort[i])
+        # println(e_sort[i])
         if best_x ⊆  X
             println("pre existing!")
             i +=1
@@ -160,7 +161,7 @@ function create_and_run_idf(dp, new_sim_data_name)
     m.make_sims([dp], idf0, batch_dir)
     g = gs.GetSimData()
     z = g.get_sim_data(batch_dir, 1, new_sim_data_name)
-    println("zzz $z")
+    # println("zzz $z")
 end
 
 function update_priors(new_sim_data_name, X, y, dp, historical_data)

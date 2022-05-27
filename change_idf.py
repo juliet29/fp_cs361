@@ -7,8 +7,11 @@ from eppy import *
 from eppy.modeleditor import IDF
 import os
 from assign_params import AssignParams
+import pprint
 
+#########################################
 # --------- Helpers --------------------------
+############################################
 def map_samples(input, output_start, output_end, input_start=0, input_end=1):
     slope = (output_end - output_start) / (input_end - input_start)
     output = output_start + slope * (input - input_start)
@@ -53,20 +56,36 @@ def assign_sched_values(idf_sched_object, dp_sched_object):
     idf_sched_object[f"Field_{8 + summ}"] = idf_sched_object[f"Field_{12 + summ}"] = dp_sched_object["break_hours"] * dp_sched_object["offseason_fraction"] 
 
 
+
+
+
+#########################################
+# --------- Change IDF Function ---------
+##########################################
+
+
 def change_idf(idf0, design_pt=None):
+    print(f"In Change IDF, DP[0] {design_pt[0][0]} \n")
     # -- Design Point Dict initialization
     a = AssignParams()
-    dp_dict = a.make_a_dict(design_pt)
-
+    if len(design_pt) == 1:
+        dp_dict = a.make_a_dict(design_pt[0])
+    else:
+        dp_dict = a.make_a_dict(design_pt)
+    pp = pprint.PrettyPrinter(indent=2)
+    # pp.pprint(dp_dict)
 
     # --------- Materials --------
 
     # -- Glazing
     dp_glazing = dp_dict["materials"]["glazing"]
 
-    glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"]
+    glaze_obj = idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"][0]
     glaze_obj.UFactor = map_samples(dp_glazing["u_val"], 0.01, 5)
     glaze_obj.Solar_Heat_Gain_Coefficient = map_samples(dp_glazing["shgc"], 0, 1)
+
+    print(idf0.idfobjects["WindowMaterial:SimpleGlazingSystem"], "\n")
+    pp.pprint(dp_glazing)
 
 
     # -- Constructions
@@ -101,8 +120,6 @@ def change_idf(idf0, design_pt=None):
     # -- Occupancy
     occ_zone_names = ["bldg"]
     assign_default_values(dp_dict, idf0, "occupancy", occ_zone_names, "People", "People_per_Zone_Floor_Area", [0.001, 0.5])
-
-
 
 
     # --------- Schedules --------------------------

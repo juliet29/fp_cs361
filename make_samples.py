@@ -58,7 +58,7 @@ class MakeSamples():
         
         # ------ Make the Simulations! --------
         for ix, pt in enumerate(design_pts):
-            print(f"make sims!!! {pt} \n")
+            # print(f"make sims!!! {pt[0]} \n")
             idf0 = change_idf(idfo, pt) 
 
             # make a new dir for the output
@@ -75,11 +75,15 @@ class MakeSamples():
                 print(f"run of sample {ix} failed \n")
 
 
+
+
+
+
 def main():
     m = MakeSamples()
     idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_25", batch_name="05_20_batch_00")
     dp = m.get_design_pts(samples_name="samples_0525_378_DGSM.csv")
-    print(f"make sims {dp}")
+    # print(f"make sims {dp}")
     m.make_sims(dp, idf0, batch_dir)
 
 if __name__ == "__main__":
