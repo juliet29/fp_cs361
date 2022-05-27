@@ -25,9 +25,28 @@ ap = pyimport("assign_params")
 ms = pyimport("make_samples")
 gs = pyimport("get_sim_data")
 
+# g = gs.GetSimData()
+# df = g.get_sim_data("atch_dir", 1, "batch_name")
+
 # a = ap.AssignParams()
 # a.make_a_dict()
 # gs.get_sim_data() # should error
+
+function prepare_objectives(sim_data_name, h)
+        # convert objectives (monthly electrical consumption) from J to GJ 
+        sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
+        sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
+        Y = Matrix(sim_data)./10e9
+    
+        # calculate rmse between simulated and historical electricty consumption
+        y = []
+        for i=1:size(Y,2)
+            append!(y, rmsd(Y[:, i], h, normalize=false))
+        end
+
+        return y
+    
+end
 
 
 function prepare_priors(samples_name, sim_data_name)
@@ -57,7 +76,7 @@ function prepare_priors(samples_name, sim_data_name)
     # data should be like this: x (2, 50), y (50,) 
     # -> (dims, numpts)
 
-    return X, y
+    return X, y, h
 end
 
 function create_gp(X, y)
@@ -117,19 +136,21 @@ function expected_improvement_pt(gp, observed_y, num_pts, dims, Xa=false)
     return [best_dp]
 end
 
-function create_and_run_idf(dp)
+function create_and_run_idf(dp, new_sim_data_name)
     m = ms.MakeSamples()
     batch_name="0526_batch_00" # TODO fix overwriting of csv
     idf0, batch_dir = m.prepare_idf("05_25/base/in.idf", "05_26",batch_name)
     m.make_sims([dp], idf0, batch_dir)
-    g = gs.MakeSamples()
-    df = g.get_sim_data(batch_dir, 1, batch_name)
-    return df
+    g = gs.GetSimData()
+    g.get_sim_data(batch_dir, 1, new_sim_data_name)
 end
 
-function update_priors(X, y, dp, df)
-    # TODO 
-    return X
+function update_priors(new_sim_data_name, X, y, dp, historical_data)
+    y_eip = prepare_objectives(new_sim_data_name, historical_data)
+    x_eip = dp[1]
+    new_x = hcat(X, x_eip)
+    new_y = vcat(y, y_eip)
+    return new_x, new_y, x_eip, y_eip
 end
 
 

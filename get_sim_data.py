@@ -5,7 +5,7 @@ from collections import OrderedDict
 import pandas as pd
 
 
-class GetSimData()
+class GetSimData():
     def get_sim_data(self, batch_path, num_sims, batch_name):
         months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
