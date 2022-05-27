@@ -4,6 +4,7 @@ then maybe go through ans run the idfs.
 assign_params -> change_idf -> make samples -> get_sim_data
 """
 
+from tabnanny import verbose
 from eppy import *
 from eppy.modeleditor import IDF
 import os
@@ -54,9 +55,10 @@ class MakeSamples():
 
 
     def make_sims(self, design_pts, idfo, batch_dir):
-        print(f"make sims {design_pts}")
+        
         # ------ Make the Simulations! --------
         for ix, pt in enumerate(design_pts):
+            print(f"make sims!!! {pt} \n")
             idf0 = change_idf(idfo, pt) 
 
             # make a new dir for the output
@@ -68,7 +70,7 @@ class MakeSamples():
 
             # run the idf 
             try:
-                idf0.run(output_directory=new_dir_name)
+                idf0.run(output_directory=new_dir_name, verbose="q")
             except:
                 print(f"run of sample {ix} failed \n")
 
@@ -77,7 +79,7 @@ def main():
     m = MakeSamples()
     idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_25", batch_name="05_20_batch_00")
     dp = m.get_design_pts(samples_name="samples_0525_378_DGSM.csv")
-    dp = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]]
+    print(f"make sims {dp}")
     m.make_sims(dp, idf0, batch_dir)
 
 if __name__ == "__main__":

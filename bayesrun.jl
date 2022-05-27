@@ -9,14 +9,29 @@ function bayes_opt(samples_name, sim_data_name, new_sim_data_name, kmax)
     # run it 
     for k=1:kmax
         gp, r0 = create_gp(X, y)
-        dp= expected_improvement_pt(gp, y, 50, size(X)[1], false)
-        println("dp $dp")
-        create_and_run_idf(dp, new_sim_data_name)
-        X, y = update_priors(new_sim_data_name, X, y, dp, h)
+        
+        dp, Xa = expected_improvement_pt(gp, y, X, false)
+
+
+
+            # dp, Xa = expected_improvement_pt(gp, y, X, Xa)
+        
+        println("dp $dp check: $(dp ⊆  X) \n")
+
+        create_and_run_idf(dp, "$new_sim_data_name-$k")
+        X, y = update_priors("$new_sim_data_name-$k", X, y, dp, h)
         println("done w run $k, y is $y")
     end
 
 end
+
+
+
+bayes_opt("samples_0524_10", "0524_batch_00_00", "0526_bopt0", 3)
+# update_priors("0526_bopt0" X, y, dp, h)
+
+
+
 
 # function bayes_test(samples_name, sim_data_name)
 #     X, y, h = prepare_priors(samples_name, sim_data_name)
@@ -26,6 +41,3 @@ end
 #     new_x, new_y = update_priors("0526_batch_00", X, y, dp, h)
 #     return new_x, new_y
 # end
-
-bayes_opt("samples_0524_10", "0524_batch_00_00", "0526_bopt0", 3)
-# update_priors("0526_bopt0" X, y, dp, h)

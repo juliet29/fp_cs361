@@ -113,9 +113,10 @@ class AssignParams:
 
 
     def make_a_dict(self, design_pt=[]):
-        print(design_pt)
-        print("\n ", type(design_pt))
+
+        print(f"dpt in assign_params {design_pt} ")
         if len(design_pt) < 1:
+            print("heey making my own dpt ")
             random.seed(2)
             design_pt =  [random.random() for i in range(0,61)]
         

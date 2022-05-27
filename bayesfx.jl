@@ -117,12 +117,12 @@ function expected_improvement(y_min, μ, σ)
     return (y_min - μ)*p_imp + σ^2*p_ymin
 end
 
-function expected_improvement_pt(gp, observed_y, num_pts, dims, Xa=false)
+function expected_improvement_pt(gp, observed_y, X, Xa=false)
     # TODO only generate samples once 
     # generate samples (need samples.jl)
     if Xa==false
         # TODO make sure are sampling new pts, dif from orig -> cld do 2x orignial data set and take the last half...
-        Xa = mapreduce(permutedims, vcat, get_filling_set_halton(num_pts, dims))'
+        Xa = mapreduce(permutedims, vcat, get_filling_set_halton(size(X)[2]*3, size(X)[1]))'
     end
     # get predictions of means and std based on fitted gp
     μa, Σa = predict_y(gp,Xa);
@@ -132,11 +132,25 @@ function expected_improvement_pt(gp, observed_y, num_pts, dims, Xa=false)
     for (m, s) in zip(μa, Σa)
         push!(e,  expected_improvement(y_min, m, s))
     end
-    best_e_index = findmax(e)[2]
-    # e_sort = sortperm(e, rev=true)
-    # println("sorted expectations", e[e_sort])
-    best_dp = Xa[:,best_e_index] # best design point
-    return [best_dp]
+    e_sort = sortperm(e, rev=true)
+    println("sorted expectations ix", e_sort)
+
+    best_x = Xa[:,e_sort[1]]
+
+    i = 1
+    while true
+        best_x = Xa[:,e_sort[i]]
+        # println(best_x )
+        println(e_sort[i])
+        if best_x ⊆  X
+            println("pre existing!")
+            i +=1
+        else
+            break
+        end
+    end
+
+    return [best_x], Xa
 end
 
 function create_and_run_idf(dp, new_sim_data_name)
@@ -145,7 +159,8 @@ function create_and_run_idf(dp, new_sim_data_name)
     idf0, batch_dir = m.prepare_idf("05_25/base/in.idf", "05_26",batch_name)
     m.make_sims([dp], idf0, batch_dir)
     g = gs.GetSimData()
-    g.get_sim_data(batch_dir, 1, new_sim_data_name)
+    z = g.get_sim_data(batch_dir, 1, new_sim_data_name)
+    println("zzz $z")
 end
 
 function update_priors(new_sim_data_name, X, y, dp, historical_data)
