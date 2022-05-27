@@ -1,5 +1,6 @@
 """
 Takes a final_dp_dict from "assign_params.py" that reflects a single design point and assign values to an idf
+assign_params -> change_idf -> make samples -> get_sim_data
 """
 
 from eppy import *

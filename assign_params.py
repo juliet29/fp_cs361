@@ -1,5 +1,6 @@
 """
 Takes in a design point with number of vars = length of dp_dict, and assigns the values to the dict, final_dp_dict. This dict is used by "change_idf.py" to translate values from the design point array to an idf.
+assign_params -> change_idf -> make samples -> get_sim_data
 """
 
 import random
@@ -111,8 +112,10 @@ class AssignParams:
 
 
 
-    def make_a_dict(self, design_pt=False):
-        if not design_pt:
+    def make_a_dict(self, design_pt=[]):
+        print(design_pt)
+        print("\n ", type(design_pt))
+        if len(design_pt) < 1:
             random.seed(2)
             design_pt =  [random.random() for i in range(0,61)]
         

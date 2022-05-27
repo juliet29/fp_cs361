@@ -1,6 +1,7 @@
 """
 Take in a csv holding a list of design points, create change idfs by calling "change_idf.py" in their own folders based on a soure idf, 
 then maybe go through ans run the idfs.
+assign_params -> change_idf -> make samples -> get_sim_data
 """
 
 from eppy import *
@@ -12,55 +13,73 @@ import pandas as pd
 
 # ----- Prepare the Source IDF -------
 
-# set the idd
-iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
-IDF.setiddname(iddfile)
+class MakeSamples():
+    def prepare_idf(self, idf_dir, day_folder, batch_name):
+        # set the idd
+        iddfile = "/Applications/OpenStudioApplication-1.1.1/EnergyPlus/Energy+.idd"
+        IDF.setiddname(iddfile)
 
-# get the idf 
-idf_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_25/base/in.idf"
+        # get the idf 
+        idf_path = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{idf_dir}"
 
-# get the weather file 
-epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
+        # get the weather file 
+        epw = "/Users/julietnwagwuume-ezeoke/Documents/cee256_local/weather_files/CA_PALO-ALTO-AP_724937S_19.epw"
 
-# create our idf for exploring 
-idf0 = IDF(idf_path, epw)
+        # create our idf for exploring 
+        idf0 = IDF(idf_path, epw)
 
-# create folder to hold the batch 
-root = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_25"
+        # create folder to hold the batch 
+        root = f"/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/{day_folder}"
+
+        # ensure the folder is uniquely named 
+        i = 0
+        while True:
+            batch_dir = os.path.join(root, f"{batch_name}_0{i}")
+            if os.path.isdir(batch_dir):
+                i+=1
+            else:
+                break
+        
+        return idf0, batch_dir
+
+    # Take in Samples and Make Changes, Save IDF in Folder
+    # random.seed(2)
+    # design_pt =  [random.random() for i in range(0,61)]
+
+    def get_design_pts(self, samples_name):
+        # ------ Process the Design Points -------------
+        df = pd.read_csv (f'/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/{samples_name}') 
+        design_pts = df.T.values.tolist()
+        return design_pts
 
 
-# batch_dir = os.path.join(root, "05_20_batch_00")
-batch_name = "0525_batch_00"
-i = 0
-while True:
-    batch_dir = os.path.join(root, f"{batch_name}_0{i}")
-    if os.path.isdir(batch_dir):
-        i+=1
-    else:
-        break
+    def make_sims(self, design_pts, idfo, batch_dir):
+        print(f"make sims {design_pts}")
+        # ------ Make the Simulations! --------
+        for ix, pt in enumerate(design_pts):
+            idf0 = change_idf(idfo, pt) 
 
-# Take in Samples and Make Changes, Save IDF in Folder
-# random.seed(2)
-# design_pt =  [random.random() for i in range(0,61)]
+            # make a new dir for the output
+            new_dir_name = os.path.join(batch_dir, f"sample_{ix+1}")
+            os.makedirs(new_dir_name)
 
-# ------ Process the Design Points -------------
-df = pd.read_csv ('/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/samples_0525_378_DGSM.csv')
-design_pts = df.T.values.tolist()
+            # save the updated idf there
+            idf0.save(os.path.join(new_dir_name, "in3.idf"))
 
-# ------ Make the Simulations! --------
-for ix, pt in enumerate(design_pts):
-    idf0 = change_idf(idf0, pt) 
+            # run the idf 
+            try:
+                idf0.run(output_directory=new_dir_name)
+            except:
+                print(f"run of sample {ix} failed \n")
 
-    # make a new dir for the output
-    new_dir_name = os.path.join(batch_dir, f"sample_{ix+1}")
-    os.makedirs(new_dir_name)
 
-    # save the updated idf there
-    idf0.save(os.path.join(new_dir_name, "in3.idf"))
+def main():
+    m = MakeSamples()
+    idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_25", batch_name="05_20_batch_00")
+    dp = m.get_design_pts(samples_name="samples_0525_378_DGSM.csv")
+    dp = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37]]
+    m.make_sims(dp, idf0, batch_dir)
 
-    # run the idf 
-    try:
-        idf0.run(output_directory=new_dir_name)
-    except:
-        print(f"run of sample {ix} failed \n")
+if __name__ == "__main__":
+    main()
 
