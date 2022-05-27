@@ -44,6 +44,8 @@ function prepare_objectives(sim_data_name, h)
             append!(y, rmsd(Y[:, i], h, normalize=false))
         end
 
+        y = convert(Array{Float64,1}, y)
+
         return y
     
 end
@@ -88,6 +90,7 @@ function create_gp(X, y)
     y_hat = predict_f(gp, X)[1]
     # TODO should be doing the maximum log likelihood here?
     r0 = rmsd(y_hat, y) 
+    println("rmse of gp to data (needs to be log likelihood) ", r0, "\n")
     return gp, r0
     
 end
@@ -150,7 +153,7 @@ function update_priors(new_sim_data_name, X, y, dp, historical_data)
     x_eip = dp[1]
     new_x = hcat(X, x_eip)
     new_y = vcat(y, y_eip)
-    return new_x, new_y, x_eip, y_eip
+    return new_x, new_y
 end
 
 
