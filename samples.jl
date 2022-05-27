@@ -22,6 +22,15 @@ function get_filling_set_halton(m, n)
     
 end
 
+# function uniform_projection_plan(m, n)
+#     perms
+# end
+
+
+
+
+
+
 # m = number of samples
 # n = number of dimensions
 function save_samples(m, n, name="samples")
@@ -33,3 +42,18 @@ function save_samples(m, n, name="samples")
 end
 
 # save_samples(10, 38, "samples_0524_10")
+
+
+# full factorial is not the way!!!
+# function get_ff_inputs(low, up, dims, count)
+#  a = fill(low, dims)
+#  b = fill(up, dims)
+#  m = fill(count, dims)
+#  return a, b, m
+# end
+
+# function samples_full_factorial(low, up, dims, count)
+#     a, b, m = get_ff_inputs(low, up, dims, count)
+#     ranges = [range(a[i], stop=b[i], length=m[i]) for i in 1:length(a)]
+#     collect.(collect(Iterators.product(ranges...)))
+# end

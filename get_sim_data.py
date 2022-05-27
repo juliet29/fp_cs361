@@ -33,7 +33,7 @@ class GetSimData():
 
             except:
                 print(f"unable to get data from sample {i}")
-                all_samples.append(list(np.zeros(12)))
+                all_samples.append([10e30]*12)
                 pass
         
         # create the dataframe 

@@ -47,32 +47,32 @@ function prepare_objectives(sim_data_name, h)
         y = convert(Array{Float64,1}, y)
 
         return y
-    
 end
-
 
 function prepare_priors(samples_name, sim_data_name)
     dp_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/$samples_name.csv"
     dp_data = DataFrame(CSV.File(dp_path))
     X = Matrix(dp_data)
 
-    # convert objectives (monthly electrical consumption) from J to GJ 
-    sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
-    sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
-    Y = Matrix(sim_data)./10e9
-
     # historical data
     hist_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/hist_data/elect.csv"
     hist_data = DataFrame(CSV.File(hist_data_path; drop=[1]))
     h = Matrix(hist_data)./10e9
 
-    # calculate rmse between simulated and historical electricty consumption
-    y = []
-    for i=1:size(Y,2)
-        append!(y, rmsd(Y[:, i], h, normalize=false))
-    end
+    y = prepare_objectives(sim_data_name, h)
 
-    y = convert(Array{Float64,1}, y); # GJ
+    # # convert objectives (monthly electrical consumption) from J to GJ 
+    # sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
+    # sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
+    # Y = Matrix(sim_data)./10e9
+
+    # # calculate rmse between simulated and historical electricty consumption
+    # y = []
+    # for i=1:size(Y,2)
+    #     append!(y, rmsd(Y[:, i], h, normalize=false))
+    # end
+
+    # y = convert(Array{Float64,1}, y); # GJ
 
     # println("x $(size(X)), y $(size(y))")
     # data should be like this: x (2, 50), y (50,) 
@@ -92,7 +92,7 @@ function create_gp(X, y)
     r0 = rmsd(y_hat, y) 
     # (needs to be log likelihood)
     println("rmse of gp to data ", r0, "\n")
-    return gp, r0
+    return gp
     
 end
 
@@ -118,13 +118,14 @@ function expected_improvement(y_min, μ, σ)
     return (y_min - μ)*p_imp + σ^2*p_ymin
 end
 
-function expected_improvement_pt(gp, observed_y, X, Xa=false)
-    # TODO only generate samples once 
-    # generate samples (need samples.jl)
-    if Xa==false
-        # TODO make sure are sampling new pts, dif from orig -> cld do 2x orignial data set and take the last half...
-        Xa = mapreduce(permutedims, vcat, get_filling_set_halton(size(X)[2]*3, size(X)[1]))'
-    end
+function samples_for_eip(X)
+    Xa = mapreduce(permutedims, vcat, get_filling_set_halton(size(X)[2]*5, size(X)[1]))'
+    return Xa
+    
+end
+
+function expected_improvement_pt(gp, observed_y, X, Xa)
+
     # get predictions of means and std based on fitted gp
     μa, Σa = predict_y(gp,Xa);
     # find the expected improvements 
@@ -134,15 +135,13 @@ function expected_improvement_pt(gp, observed_y, X, Xa=false)
         push!(e,  expected_improvement(y_min, m, s))
     end
     e_sort = sortperm(e, rev=true)
-    # println("sorted expectations ix", e_sort)
 
     best_x = Xa[:,e_sort[1]]
 
+    # ensure that point is new 
     i = 1
     while true
         best_x = Xa[:,e_sort[i]]
-        # println(best_x )
-        # println(e_sort[i])
         if best_x ⊆  X
             println("pre existing!")
             i +=1
@@ -151,7 +150,7 @@ function expected_improvement_pt(gp, observed_y, X, Xa=false)
         end
     end
 
-    return [best_x], Xa
+    return [best_x]
 end
 
 function create_and_run_idf(dp, new_sim_data_name)
