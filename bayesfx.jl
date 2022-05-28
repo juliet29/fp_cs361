@@ -140,6 +140,27 @@ function expected_improvement_pt(gp, observed_y, X, Xa)
     return [best_x]
 end
 
+function expected_improvement_direct(gp, observed_y)
+    # each iteration will have a different gp, and dif y_min (hopefully..)
+    
+    # get the best pt observed so far as a pt of comparison
+    y_min  = minimum(observed_y)
+
+    # return function that depends on x 
+    return x -> ei_pso(x, gp, y_min)
+
+end
+
+
+function ei_pso(X, gp, y_min )
+    # perdiction 
+    μ, Σ = predict_y(gp, X);
+    # compute the expected improvement 
+    e = expected_improvement(y_min, μ, Σ)
+
+    return e
+end
+
 function create_and_run_idf(dp, new_sim_data_name)
     m = ms.MakeSamples()
     batch_name="0526_batch_00" # TODO fix overwriting of csv
