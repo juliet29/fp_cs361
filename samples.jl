@@ -22,9 +22,9 @@ function get_filling_set_halton(m, n)
     
 end
 
-# function uniform_projection_plan(m, n)
-#     perms
-# end
+function uniform_projection_plan(m, n)
+    perms
+end
 
 
 

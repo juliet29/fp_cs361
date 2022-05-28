@@ -33,7 +33,7 @@ class GetSimData():
 
             except:
                 print(f"unable to get data from sample {i}")
-                all_samples.append([10e30]*12)
+                all_samples.append([0.000001]*12)
                 pass
         
         # create the dataframe 
@@ -47,9 +47,9 @@ class GetSimData():
 
 
 def main():
-    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_25/0525_batch_00_01"
-    num_sims = 378
-    batch_name = "0525_batch_00_01"
+    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_27/05_27_batch_00_01"
+    num_sims = 100
+    batch_name = "05_27_batch_00_02_small_nans"
     g = GetSimData()
     g.get_sim_data(batch_path, num_sims, batch_name)
 

@@ -71,18 +71,16 @@ class MakeSamples():
             # run the idf 
             try:
                 idf0.run(output_directory=new_dir_name, verbose="q")
+                print(f"run of sample {ix} finished \n")
             except:
                 print(f"run of sample {ix} failed \n")
 
 
 
-
-
-
 def main():
     m = MakeSamples()
-    idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_25", batch_name="05_20_batch_00")
-    dp = m.get_design_pts(samples_name="samples_0525_378_DGSM.csv")
+    idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_27", batch_name="05_27_batch_00")
+    dp = m.get_design_pts(samples_name="0527_samples.csv")
     # print(f"make sims {dp}")
     m.make_sims(dp, idf0, batch_dir)
 

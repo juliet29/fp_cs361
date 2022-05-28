@@ -25,31 +25,25 @@ ap = pyimport("assign_params")
 ms = pyimport("make_samples")
 gs = pyimport("get_sim_data")
 
-# g = gs.GetSimData()
-# df = g.get_sim_data("atch_dir", 1, "batch_name")
-
-# a = ap.AssignParams()
-# a.make_a_dict()
-# gs.get_sim_data() # should error
 
 function prepare_objectives(sim_data_name, h)
-        # convert objectives (monthly electrical consumption) from J to GJ 
-        sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
-        sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
-        Y = Matrix(sim_data)./10e9
-    
-        # calculate rmse between simulated and historical electricty consumption
-        y = []
-        for i=1:size(Y,2)
-            append!(y, rmsd(Y[:, i], h, normalize=false))
-        end
+    # convert objectives (monthly electrical consumption) from J to GJ 
+    sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
+    sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
+    Y = Matrix(sim_data)./10e9
 
-        y = convert(Array{Float64,1}, y)
+    # calculate rmse between simulated and historical electricty consumption
+    y = []
+    for i=1:size(Y,2)
+        append!(y, rmsd(Y[:, i], h, normalize=false))
+    end
 
-        return y
+    y = convert(Array{Float64,1}, y)
+
+    return y
 end
 
-function prepare_priors(samples_name, sim_data_name)
+function prepare_priors(samples_name, sim_data_name, drop_bad=true)
     dp_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/samples/$samples_name.csv"
     dp_data = DataFrame(CSV.File(dp_path))
     X = Matrix(dp_data)
@@ -59,9 +53,15 @@ function prepare_priors(samples_name, sim_data_name)
     hist_data = DataFrame(CSV.File(hist_data_path; drop=[1]))
     h = Matrix(hist_data)./10e9
 
+    # rmse between result of simulation and historical electrical data
     y = prepare_objectives(sim_data_name, h)
 
-    return X, y, h
+    # drop bad values (from failed simulations) so that gp can fit better 
+    bad_ix = findall(x->x>10e5, y)
+    Xg = X[:, Not(collect(bad_ix))]
+    yg = y[Not(collect(bad_ix))]
+
+    return Xg, yg, h
 end
 
 function create_gp(X, y)
@@ -76,9 +76,9 @@ function create_gp(X, y)
     mll1 = gp.mll
 
     println("pre and post opt mll: $mll0, $mll1")
-    println("opt kernel: $(gp.kernel) \n opt mean $(gp.mean)")
+    # println("opt kernel: $(gp.kernel) \n opt mean $(gp.mean)")
 
-    return gp
+    return gp, mll1
     
 end
 
@@ -111,11 +111,12 @@ function samples_for_eip(X)
 end
 
 function expected_improvement_pt(gp, observed_y, X, Xa)
-
+    # get the best pt observed so far as a pt of comparison 
+    y_min  = minimum(observed_y)
     # get predictions of means and std based on fitted gp
     μa, Σa = predict_y(gp,Xa);
     # find the expected improvements 
-    y_min  = minimum(observed_y)
+    
     e = []
     for (m, s) in zip(μa, Σa)
         push!(e,  expected_improvement(y_min, m, s))
@@ -149,12 +150,22 @@ function create_and_run_idf(dp, new_sim_data_name)
     # println("zzz $z")
 end
 
-function update_priors(new_sim_data_name, X, y, dp, historical_data)
+function update_priors(new_sim_data_name, X, y, dp, historical_data, mll, mll_arr)
     y_eip = prepare_objectives(new_sim_data_name, historical_data)
+    # println("y_eip $y_eip")
+    if y_eip[1] > 10e5
+        # set to something that is bad, but wont compleyely destroy the gp 
+        y_eip[1] = 4
+
+    end
     x_eip = dp[1]
     new_x = hcat(X, x_eip)
     new_y = vcat(y, y_eip)
-    return new_x, new_y
+
+    mll_arr = vcat(mll_arr, mll)
+
+
+    return new_x, new_y, mll_arr
 end
 
 
