@@ -26,7 +26,7 @@ end
 
 
 
-bayes_opt("0520_samples", "0520_batch_00_06", "0527_bopt0", 10)
+bayes_opt("0520_samples", "0520_batch_00_06", "0527_bopt1", 5)
 # update_priors("0526_bopt0" X, y, dp, h)
 
 

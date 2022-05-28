@@ -61,37 +61,23 @@ function prepare_priors(samples_name, sim_data_name)
 
     y = prepare_objectives(sim_data_name, h)
 
-    # # convert objectives (monthly electrical consumption) from J to GJ 
-    # sim_data_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/sim_data/$sim_data_name.csv"
-    # sim_data = DataFrame(CSV.File(sim_data_path; drop=[1]))
-    # Y = Matrix(sim_data)./10e9
-
-    # # calculate rmse between simulated and historical electricty consumption
-    # y = []
-    # for i=1:size(Y,2)
-    #     append!(y, rmsd(Y[:, i], h, normalize=false))
-    # end
-
-    # y = convert(Array{Float64,1}, y); # GJ
-
-    # println("x $(size(X)), y $(size(y))")
-    # data should be like this: x (2, 50), y (50,) 
-    # -> (dims, numpts)
-
     return X, y, h
 end
 
 function create_gp(X, y)
-    "create gp, simple implementation, no opt of hparams now"
-    m = MeanZero()
-    kern = SE(0.09, 0.7)
-    gp = GP(X,y,m,kern)
-    # println("gp done")
-    y_hat = predict_f(gp, X)[1]
-    # TODO should be doing the maximum log likelihood here?
-    r0 = rmsd(y_hat, y) 
-    # (needs to be log likelihood)
-    println("rmse of gp to data ", r0, "\n")
+    "create gp, optimize hyperparameters"
+    m = MeanConst(0.1);
+    kern = SE(0.0, 0.0);
+    gp = GP(X,y,m,kern);
+    mll0 = gp.mll
+
+    optimize!(gp, noise=false, lik=false)
+    
+    mll1 = gp.mll
+
+    println("pre and post opt mll: $mll0, $mll1")
+    println("opt kernel: $(gp.kernel) \n opt mean $(gp.mean)")
+
     return gp
     
 end
