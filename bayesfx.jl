@@ -106,9 +106,11 @@ end
 
 function samples_for_eip(X)
     Xa = mapreduce(permutedims, vcat, get_filling_set_halton(size(X)[2]*5, size(X)[1]))'
+    println(size(Xa))
     return Xa
     
 end
+
 
 function expected_improvement_pt(gp, observed_y, X, Xa)
     # get the best pt observed so far as a pt of comparison 
@@ -138,6 +140,36 @@ function expected_improvement_pt(gp, observed_y, X, Xa)
     end
 
     return [best_x], e_sort[1]
+end
+
+function expected_improvement_graph(gp, observed_y, X, Xa)
+    # get the best pt observed so far as a pt of comparison 
+    y_min  = minimum(observed_y)
+    # get predictions of means and std based on fitted gp
+    μa, Σa = predict_y(gp,Xa);
+    # find the expected improvements 
+    
+    e = []
+    for (m, s) in zip(μa, Σa)
+        push!(e,  expected_improvement(y_min, m, s))
+    end
+    e_sort = sortperm(e, rev=true)
+
+    best_x = Xa[:,e_sort[1]]
+
+    # ensure that point is new 
+    i = 1
+    while true
+        best_x = Xa[:,e_sort[i]]
+        if best_x ⊆  X
+            println("pre existing!")
+            i +=1
+        else
+            break
+        end
+    end
+
+    return [best_x], e_sort[1], e
 end
 
 

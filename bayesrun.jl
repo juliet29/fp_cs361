@@ -24,14 +24,10 @@ end
 
 
 
-
-
-
-
 function bayes_opt_exp(samples_name, sim_data_name, new_sim_data_name, kmax, nsamps, goal_rmse)
     # initialize
     X, y, h = prepare_priors(samples_name, sim_data_name)
-    println(size(X))
+
     
     # use same set of samples for predicting eip 
     Xa = samples_for_eip(X)
