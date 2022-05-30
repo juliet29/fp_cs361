@@ -4,7 +4,6 @@ then maybe go through ans run the idfs.
 assign_params -> change_idf -> make samples -> get_sim_data
 """
 
-from tabnanny import verbose
 from eppy import *
 from eppy.modeleditor import IDF
 import os

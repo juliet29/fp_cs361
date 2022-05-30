@@ -47,9 +47,9 @@ class GetSimData():
 
 
 def main():
-    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_27/05_27_batch_00_01"
-    num_sims = 100
-    batch_name = "05_27_batch_00_02_small_nans"
+    batch_path = "/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fplocal_cs361/eppy_energy_models/05_30/05_30_pso100_50_2_00"
+    num_sims = 9
+    batch_name = "05_30_pso100_50_2"
     g = GetSimData()
     g.get_sim_data(batch_path, num_sims, batch_name)
 

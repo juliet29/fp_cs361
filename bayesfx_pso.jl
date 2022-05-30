@@ -2,6 +2,35 @@ include("bayesfx.jl");
 include("pso.jl");
 
 
+function create_gp(X, y)
+    "create gp, optimize hyperparameters"
+    m = MeanConst(0.1);
+    kern = SE(0.0, 0.0);
+    gp = GP(X,y,m,kern);
+    mll0 = gp.mll
+
+    optimize!(gp, noise=false, lik=false)
+    
+    mll1 = gp.mll
+
+    println("pre and post opt mll: $mll0, $mll1")
+    # println("opt kernel: $(gp.kernel) \n opt mean $(gp.mean)")
+
+    return gp, mll1
+    
+end
+
+function make_gp_fx(gp)
+    return x -> pred_gp(x, gp)
+end
+
+function pred_gp(X, gp)
+    X = reshape(X, length(X), 1)
+    μ, Σ = predict_y(gp, X);
+    return μ[1]
+end
+
+
 
 function expected_improvement_direct(gp, observed_y)
     # each iteration will have a different gp, and dif y_min (hopefully..)

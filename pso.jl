@@ -10,8 +10,13 @@ mutable struct Particle
 end
 
 function particle_swarm_optimization(f, population, k_max, w=1, c1=1, c2=1)
+    
     # get the dimensions of the problem, size of the position vectors 
     n = length(population[1].x)
+
+    # history 
+    hist = zeros(n+1, k_max)
+    println(size(population))
 
     # global best is just taken from first item in dataframe 
     x_best, y_best = copy(population[1].x_best), Inf
@@ -35,6 +40,10 @@ function particle_swarm_optimization(f, population, k_max, w=1, c1=1, c2=1)
             # update v -> accelerate randomly towards the goal 
             P.v = w*P.v + c1*r1.*(P.x_best - P.x) + c2*r2.*(x_best - P.x)
             y = f(P.x)
+            # penalty 
+            if y < 0
+                y = y * -1.5
+            end 
             if y < y_best
                 x_best[:], y_best = P.x, y
             end 
@@ -42,9 +51,11 @@ function particle_swarm_optimization(f, population, k_max, w=1, c1=1, c2=1)
                 P.x_best[:] = P.x
             end
         end  
-        println("starting another iteration, ybest is $y_best, xbest[1] is $(x_best[1])") 
+        println("k = $k \n ybest is $y_best, xbest[1] is $(x_best[1])") 
+        hist[1:end-1, k] = x_best
+        hist[end,k] = y_best
     end
-    return population, x_best, y_best
+    return population, x_best, y_best, hist
 end
 
 
@@ -64,6 +75,11 @@ function create_population(m, n)
     
     return population
 end
+
+
+
+
+
 
 
 ####################################
@@ -133,7 +149,7 @@ end
 function create_population_bayes(m, n)
     positions = get_filling_set_halton(m, n);
     # TOOD generalize
-    velocities = rand(m,n)*10e-3
+    velocities = rand(m,n)*10e-1
     # create population 
     population = []
     for i in 1:size(positions, 1)
@@ -147,20 +163,3 @@ function create_population_bayes(m, n)
 end
 
 
-# # ----- Try It on Different Functions!  --------
-# function ep_opt(num_samples=10, iterations=10)
-#     pop = create_population(num_samples, 61)
-#     population, x_best, y_best = particle_swarm_optimization(fpred, pop, iterations)
-#     println("y_best is $y_best")
-# end
-
-# function ftest(x; m=10)
-#     return -sum(sin(v)*sin(i*v^2/π)^(2m) for (i,v) in enumerate(x))
-# end
-
-
-# function test_opt()
-#     pop = create_population(10, 50)
-#     population, x_best, y_best = particle_swarm_optimization(ftest, pop, 10)
-#     println("y_best is $y_best")
-# end

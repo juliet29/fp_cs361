@@ -83,15 +83,7 @@ function create_gp(X, y)
 end
 
 
-function plot_gp(gp, X, y)
-    "simple plot, improve with pca or distance from zero"
-    μ, Σ = predict_y(gp,X);
-    plotx = X[1,:]
-    px = sortperm(plotx);
-    plot(plotx[px],μ[px],ribbon=Σ[px], title="Gaussian Process for $(size(X)) dataset, first dim v. shown",label="95% predictive confidence region")
-    scatter!(plotx[px],y[px],label="Observations")
-    # TODO label rmse, save plots 
-end
+
 
 # ---- Aquisition Functions ----
 
