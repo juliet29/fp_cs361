@@ -1,4 +1,5 @@
-include("/Users/julietnwagwuume-ezeoke/My Drive/CS361_Optim/_fp_cs361/bayesfx.jl");
+include("bayesfx.jl");
+include("pso.jl");
 
 # include("bayesrun.jl") include("bayesfx.jl")
 
@@ -22,9 +23,15 @@ function bayes_opt(samples_name, sim_data_name, new_sim_data_name, kmax)
 end
 
 
+
+
+
+
+
 function bayes_opt_exp(samples_name, sim_data_name, new_sim_data_name, kmax, nsamps, goal_rmse)
     # initialize
     X, y, h = prepare_priors(samples_name, sim_data_name)
+    println(size(X))
     
     # use same set of samples for predicting eip 
     Xa = samples_for_eip(X)
@@ -34,6 +41,7 @@ function bayes_opt_exp(samples_name, sim_data_name, new_sim_data_name, kmax, nsa
     y = y[1:nsamps]
 
     mll_arr = []
+    e_arr = []
     
 
     y_min = minimum(y)
@@ -45,11 +53,11 @@ function bayes_opt_exp(samples_name, sim_data_name, new_sim_data_name, kmax, nsa
         if k < kmax
             # iterate until rmse is below goal_rmse
             gp, mll = create_gp(X, y)
-            dp = expected_improvement_pt(gp, y, X, Xa)
+            dp, e = expected_improvement_pt(gp, y, X, Xa)
 
             create_and_run_idf(dp, "$new_sim_data_name")
 
-            X, y, mll_arr = update_priors("$new_sim_data_name", X, y, dp, h, mll, mll_arr)
+            X, y, mll_arr, e_arr = update_priors("$new_sim_data_name", X, y, dp, h, mll, mll_arr, e, e_arr)
             y_min = minimum(y)
 
             println("\n Run $k. Last y: $(y[end]), y_min: $y_min \n ")
@@ -65,8 +73,9 @@ function bayes_opt_exp(samples_name, sim_data_name, new_sim_data_name, kmax, nsa
     end
 
     # save result of run 
+    e_arr_fin = vcat(fill(0, nsamps), e_arr)
     mll_arr_fin = vcat(fill(0, nsamps), mll_arr)
-    results = vcat(X, y', mll_arr_fin')
+    results = vcat(X, y', mll_arr_fin', e_arr_fin')
     df = DataFrame(results, :auto)
     CSV.write("bayesdata/halton_$(nsamps).csv", df)
 end
@@ -78,7 +87,9 @@ end
 # _fp_cs361/sim_data/05_27_batch_00_01.csv
 # bayes_opt("0527_samples", "05_27_batch_00_02_small_nans", "0527_bopt2", 5)
 
-bayes_opt_exp("0527_samples", "/05_27_batch_00_01", "0527_bexp0", 2, 50, 0.10)
+# bayes_opt_pso("0527_samples", "/05_27_batch_00_01", "0527_bexp0", 5, 50, 0.10)
+
+bayes_opt_exp("0527_samples", "/05_27_batch_00_01", "0527_bexp0", 15, 25, 0.10)
 
 
 

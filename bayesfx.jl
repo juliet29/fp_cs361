@@ -137,29 +137,9 @@ function expected_improvement_pt(gp, observed_y, X, Xa)
         end
     end
 
-    return [best_x]
+    return [best_x], e_sort[1]
 end
 
-function expected_improvement_direct(gp, observed_y)
-    # each iteration will have a different gp, and dif y_min (hopefully..)
-    
-    # get the best pt observed so far as a pt of comparison
-    y_min  = minimum(observed_y)
-
-    # return function that depends on x 
-    return x -> ei_pso(x, gp, y_min)
-
-end
-
-
-function ei_pso(X, gp, y_min )
-    # perdiction 
-    μ, Σ = predict_y(gp, X);
-    # compute the expected improvement 
-    e = expected_improvement(y_min, μ, Σ)
-
-    return e
-end
 
 function create_and_run_idf(dp, new_sim_data_name)
     m = ms.MakeSamples()
@@ -171,7 +151,8 @@ function create_and_run_idf(dp, new_sim_data_name)
     # println("zzz $z")
 end
 
-function update_priors(new_sim_data_name, X, y, dp, historical_data, mll, mll_arr)
+
+function update_priors(new_sim_data_name, X, y, dp, historical_data, mll, mll_arr, e, e_arr)
     y_eip = prepare_objectives(new_sim_data_name, historical_data)
     # println("y_eip $y_eip")
     if y_eip[1] > 10e5
@@ -184,10 +165,13 @@ function update_priors(new_sim_data_name, X, y, dp, historical_data, mll, mll_ar
     new_y = vcat(y, y_eip)
 
     mll_arr = vcat(mll_arr, mll)
+    e_arr = vcat(e_arr, e)
 
 
-    return new_x, new_y, mll_arr
+    return new_x, new_y, mll_arr, e_arr
 end
+
+
 
 
 
