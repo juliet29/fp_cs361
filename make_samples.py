@@ -1,6 +1,6 @@
 """
 Take in a csv holding a list of design points, create change idfs by calling "change_idf.py" in their own folders based on a soure idf, 
-then maybe go through ans run the idfs.
+then maybe go through and run the idfs.
 assign_params -> change_idf -> make samples -> get_sim_data
 """
 
@@ -78,8 +78,8 @@ class MakeSamples():
 
 def main():
     m = MakeSamples()
-    idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="05_27", batch_name="05_27_batch_00")
-    dp = m.get_design_pts(samples_name="0527_samples.csv")
+    idf0, batch_dir = m.prepare_idf(idf_dir="05_25/base/in.idf", day_folder="06_07", batch_name="06_07_batch_00")
+    dp = m.get_design_pts(samples_name="samples_0525_378_DGSM.csv")
     # print(f"make sims {dp}")
     m.make_sims(dp, idf0, batch_dir)
 
