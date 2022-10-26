@@ -1,1 +1,3 @@
-# fp_cs361
+# Automated Building Energy Model Calibration using Bayesian and Particle Swarm Optimization
+## fp_cs361
+Building energy modeling is a critical tool for understanding and improving building energy consumption, necessary for a transition towards a green future. Calibrating these models can be especially difficult and time consuming, especially when many of the parameters are unknown. In this project, Bayesian optimization and particle swarm optimization were used to calibrate an energy model of the Thornton Center for Engineering Management. The Bayesian optimization process showed improved performance, and was able to calibrate models to an Root Mean Squared Error (RMSE) of 0.4 with under 50 evaluations to EnergyPlus.
